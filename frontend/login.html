@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Krishna Hospital | Patient Login</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="welcome-card">
+
+        <img src="assets/logo.png" class="logo" alt="Krishna Hospital Logo">
+
+        <h1 id="loginTitle">Patient Login</h1>
+
+        <p id="loginDesc">Sign in to continue.</p>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <label for="loginId">Email or Phone Number</label>
+                <input
+                    id="loginId"
+                    class="input-field"
+                    type="text"
+                    placeholder="Enter email or phone"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label for="loginPassword">Password</label>
+                <input
+                    id="loginPassword"
+                    type="password"
+                    class="input-field"
+                    placeholder="Enter password"
+                    required>
+            </div>
+
+            <p id="loginError" class="error-text"></p>
+
+            <button type="submit" class="start-btn" id="loginBtn">
+                Login
+            </button>
+
+        </form>
+
+        <p class="switch-link">
+            <span id="newUserText">New user?</span>
+            <a href="signup.html" id="createAccountText">Create Account</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script src="js/login.js"></script>
+
+</body>
+</html>

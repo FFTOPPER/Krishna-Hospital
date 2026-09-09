@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishna Hospital | Child Consultation Form</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins','Noto Sans Tamil',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#edf4ff,#dcecff);
+padding:25px;
+min-height:100vh;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:rgba(255,255,255,.97);
+backdrop-filter:blur(10px);
+border-radius:30px;
+padding:38px;
+box-shadow:0 20px 50px rgba(47,99,224,.12);
+}
+
+.header{
+display:flex;
+align-items:center;
+gap:18px;
+margin-bottom:28px;
+padding-bottom:20px;
+border-bottom:1px solid #e5e7eb;
+}
+
+.header img{
+width:75px;
+}
+
+.header h1{
+color:#2f63e0;
+font-size:30px;
+}
+
+.header p{
+color:#64748b;
+margin-top:4px;
+}
+
+.language{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+margin-bottom:25px;
+}
+
+.language button{
+border:none;
+padding:10px 18px;
+border-radius:10px;
+cursor:pointer;
+background:#e5e7eb;
+font-weight:500;
+transition:.2s;
+}
+
+.language button.active{
+background:#2f63e0;
+color:white;
+}
+
+.form-title{
+text-align:center;
+margin-bottom:30px;
+}
+
+.form-title h2{
+color:#1e293b;
+font-size:25px;
+margin-bottom:6px;
+}
+
+.form-title p{
+color:#64748b;
+}
+
+.section{
+background:#f8fbff;
+padding:25px;
+border-radius:20px;
+margin-bottom:25px;
+border:1px solid #e2ecff;
+}
+
+.section h3{
+color:#2f63e0;
+margin-bottom:18px;
+font-size:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+}
+
+.field{
+display:flex;
+flex-direction:column;
+}
+
+label{
+font-size:14px;
+font-weight:600;
+margin-bottom:8px;
+color:#1f2937;
+}
+
+input,
+select,
+textarea{
+padding:15px;
+border-radius:12px;
+border:1px solid #d6dce7;
+font-size:15px;
+outline:none;
+transition:.25s;
+background:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+border-color:#2f63e0;
+box-shadow:0 0 0 4px rgba(47,99,224,.12);
+}
+
+input[readonly]{
+background:#eef5ff;
+cursor:not-allowed;
+font-weight:500;
+}
+
+textarea{
+resize:vertical;
+min-height:120px;
+}
+
+.submit{
+width:100%;
+padding:17px;
+border:none;
+border-radius:15px;
+background:#2f63e0;
+color:white;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+.submit:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(47,99,224,.28);
+}
+
+.message{
+margin-top:18px;
+text-align:center;
+font-weight:600;
+}
+
+.success{color:#16a34a;}
+.error{color:#dc2626;}
+
+@media(max-width:600px){
+
+.container{
+padding:25px;
+}
+
+.header{
+flex-direction:column;
+text-align:center;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<img src="assets/logo.png">
+
+<div>
+
+<h1 id="hospitalName">Krishna Hospital</h1>
+
+<p id="hospitalSub">Mental Wellness Centre</p>
+
+</div>
+
+</div>
+
+<div class="language">
+
+<button id="enBtn">English</button>
+
+<button id="taBtn">தமிழ்</button>
+
+</div>
+
+<div class="form-title">
+
+<h2 id="formHeading">Child Consultation Registration Form</h2>
+
+<p id="formDesc">Please fill the following details before your consultation.</p>
+
+</div>
+
+<form id="registrationForm">
+
+<div class="section">
+
+<h3 id="basicTitle">Basic Information</h3>
+
+<div class="grid">
+
+<div class="field">
+
+<label id="lblDate">Date</label>
+
+<input id="date" readonly>
+
+</div>
+
+<div class="field">
+
+<label id="lblRef">1. Referred By</label>
+
+<input id="referredBy">
+
+</div>
+
+<div class="field">
+
+<label id="lblChild">2. Child's Name</label>
+
+<input id="childName" required>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3 id="childTitle">Child Details</h3>
+
+<div class="grid">
+
+<div class="field">
+
+<label id="lblDob">Date of Birth</label>
+
+<input type="date" id="dob" required>
+
+</div>
+
+<div class="field">
+
+<label id="lblAge">Age</label>
+
+<input id="age" readonly>
+
+</div>
+
+<div class="field">
+
+<label id="lblGender">Gender</label>
+
+<select id="gender">
+
+<option value="" id="genderDefault">Select Gender</option>
+
+<option value="Male" id="maleOpt">Male</option>
+
+<option value="Female" id="femaleOpt">Female</option>
+
+<option value="Other" id="otherOpt">Other</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3 id="parentTitle">Parent / Caregiver</h3>
+
+<div class="grid">
+
+<div class="field">
+
+<label id="lblParent">4. Parent/Caregiver Name</label>
+
+<input id="parentName" required>
+
+</div>
+
+<div class="field">
+
+<label id="lblEdu">5. Parent Education & Occupation</label>
+
+<input id="parentEducation">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3 id="addressTitle">Address</h3>
+
+<div class="field">
+
+<label id="lblAddress">6. Residential Address</label>
+
+<textarea id="address"></textarea>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3 id="consultTitle">Consultation</h3>
+
+<div class="field">
+
+<label id="lblComplaint">7. Complaints for Consultation</label>
+
+<textarea id="complaint"></textarea>
+
+</div>
+
+</div>
+
+<button class="submit" id="submitBtn" type="submit">
+
+Submit Registration
+
+</button>
+
+</form>
+
+<div id="message" class="message"></div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+let lang=localStorage.getItem("language") || "en";
+
+const txt={
+
+en:{
+hospital:"Krishna Hospital",
+sub:"Mental Wellness Centre",
+heading:"Child Consultation Registration Form",
+desc:"Please fill the following details before your consultation.",
+
+basic:"Basic Information",
+childSec:"Child Details",
+parentSec:"Parent / Caregiver",
+addressSec:"Address",
+consultSec:"Consultation",
+
+date:"Date",
+ref:"1. Referred By",
+child:"2. Child's Name",
+dob:"Date of Birth",
+age:"Age",
+gender:"Gender",
+
+parent:"4. Parent/Caregiver Name",
+edu:"5. Parent Education & Occupation",
+address:"6. Residential Address",
+complaint:"7. Complaints for Consultation",
+
+refPH:"Doctor / Self / School / Others",
+childPH:"Enter child's name",
+parentPH:"Enter parent/caregiver name",
+eduPH:"Example: Graduate, Teacher",
+addressPH:"Enter complete residential address",
+complaintPH:"Describe the child's concerns...",
+
+selectGender:"Select Gender",
+male:"Male",
+female:"Female",
+other:"Other",
+
+submit:"Submit Registration",
+success:"Registration submitted successfully.",
+
+years:"Years",
+months:"Months",
+
+serverError:"Unable to connect to server."
+
+},
+
+ta:{
+
+hospital:"கிருஷ்ணா மருத்துவமனை",
+sub:"மனநல நல்வாழ்வு மையம்",
+heading:"குழந்தை ஆலோசனை பதிவு படிவம்",
+desc:"ஆலோசனைக்கு முன் கீழே உள்ள விவரங்களை நிரப்பவும்.",
+
+basic:"அடிப்படை தகவல்கள்",
+childSec:"குழந்தையின் விவரங்கள்",
+parentSec:"பெற்றோர் / பராமரிப்பாளர்",
+addressSec:"முகவரி",
+consultSec:"ஆலோசனை",
+
+date:"தேதி",
+ref:"1. பரிந்துரைத்தவர்",
+child:"2. குழந்தையின் பெயர்",
+dob:"பிறந்த தேதி",
+age:"வயது",
+gender:"பாலினம்",
+
+parent:"4. பெற்றோர் / பராமரிப்பாளர் பெயர்",
+edu:"5. பெற்றோரின் கல்வி மற்றும் தொழில்",
+address:"6. குடியிருப்பு முகவரி",
+complaint:"7. ஆலோசனைக்கான புகார்கள்",
+
+refPH:"மருத்துவர் / சுயம் / பள்ளி / மற்றவை",
+childPH:"குழந்தையின் பெயரை உள்ளிடவும்",
+parentPH:"பெற்றோர் / பராமரிப்பாளர் பெயரை உள்ளிடவும்",
+eduPH:"உதா: பட்டதாரி, ஆசிரியர்",
+addressPH:"முழு முகவரியை உள்ளிடவும்",
+complaintPH:"குழந்தையின் பிரச்சினையை விவரிக்கவும்...",
+
+selectGender:"பாலினத்தைத் தேர்வு செய்யவும்",
+male:"ஆண்",
+female:"பெண்",
+other:"மற்றவை",
+
+submit:"பதிவை சமர்ப்பிக்கவும்",
+success:"பதிவு வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது.",
+
+years:"ஆண்டுகள்",
+months:"மாதங்கள்",
+
+serverError:"சேவையகத்துடன் இணைக்க முடியவில்லை."
+
+}
+
+};
+
+function applyLanguage(){
+
+const t=txt[lang];
+
+hospitalName.innerText=t.hospital;
+hospitalSub.innerText=t.sub;
+
+formHeading.innerText=t.heading;
+formDesc.innerText=t.desc;
+
+basicTitle.innerText=t.basic;
+childTitle.innerText=t.childSec;
+parentTitle.innerText=t.parentSec;
+addressTitle.innerText=t.addressSec;
+consultTitle.innerText=t.consultSec;
+
+lblDate.innerText=t.date;
+lblRef.innerText=t.ref;
+lblChild.innerText=t.child;
+lblDob.innerText=t.dob;
+lblAge.innerText=t.age;
+lblGender.innerText=t.gender;
+lblParent.innerText=t.parent;
+lblEdu.innerText=t.edu;
+lblAddress.innerText=t.address;
+lblComplaint.innerText=t.complaint;
+
+referredBy.placeholder=t.refPH;
+childName.placeholder=t.childPH;
+parentName.placeholder=t.parentPH;
+parentEducation.placeholder=t.eduPH;
+address.placeholder=t.addressPH;
+complaint.placeholder=t.complaintPH;
+
+genderDefault.text=t.selectGender;
+maleOpt.text=t.male;
+femaleOpt.text=t.female;
+otherOpt.text=t.other;
+
+submitBtn.innerText=t.submit;
+
+enBtn.classList.toggle("active",lang==="en");
+taBtn.classList.toggle("active",lang==="ta");
+
+}
+
+enBtn.onclick=()=>{
+
+lang="en";
+
+localStorage.setItem("language","en");
+
+applyLanguage();
+
+};
+
+taBtn.onclick=()=>{
+
+lang="ta";
+
+localStorage.setItem("language","ta");
+
+applyLanguage();
+
+};
+
+const today=new Date();
+
+date.value=today.toLocaleDateString("en-GB",{
+
+day:"2-digit",
+
+month:"long",
+
+year:"numeric"
+
+});
+
+dob.addEventListener("change",()=>{
+
+const birth=new Date(dob.value);
+
+const now=new Date();
+
+let years=now.getFullYear()-birth.getFullYear();
+
+let months=now.getMonth()-birth.getMonth();
+
+if(now.getDate()<birth.getDate()){
+
+months--;
+
+}
+
+if(months<0){
+
+years--;
+
+months+=12;
+
+}
+
+age.value=`${years} ${txt[lang].years} ${months} ${txt[lang].months}`;
+
+});
+
+registrationForm.addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const patientId=localStorage.getItem("patient_id");
+
+if(!patientId){
+
+message.className="message error";
+
+message.innerText="Please login again.";
+
+return;
+
+}
+
+const payload={
+
+email_or_phone:patientId,
+
+consultation_date:today.toISOString().split("T")[0],
+
+referred_by:referredBy.value,
+
+child_name:childName.value,
+
+dob:dob.value,
+
+age:age.value,
+
+gender:gender.value,
+
+parent_name:parentName.value,
+
+parent_education_occupation:parentEducation.value,
+
+address:address.value,
+
+consultation_complaints:complaint.value
+
+};
+
+try{
+
+const response=await fetch(`${API}/patient-registration`,{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify(payload)
+
+});
+
+const data=await response.json();
+
+if(response.ok && data.success){
+
+message.className="message success";
+
+message.innerText=txt[lang].success;
+
+setTimeout(()=>{
+
+window.location.href="dashboard.html";
+
+},1500);
+
+}else{
+
+message.className="message error";
+
+message.innerText=data.message || txt[lang].serverError;
+
+}
+
+}catch(error){
+
+console.error(error);
+
+message.className="message error";
+
+message.innerText=txt[lang].serverError;
+
+}
+
+});
+
+applyLanguage();
+
+</script>
+
+</body>
+</html>

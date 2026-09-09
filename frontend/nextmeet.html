@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Next Follow-up</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eef5ff;
+min-height:100vh;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.brand img{
+width:55px;
+}
+
+.brand h2{
+color:#2f63e0;
+}
+
+.back{
+background:#2f63e0;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+text-decoration:none;
+font-weight:600;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:30px 20px;
+}
+
+.page-title{
+margin-bottom:25px;
+}
+
+.page-title h1{
+color:#2f63e0;
+}
+
+.page-title p{
+color:#64748b;
+margin-top:6px;
+}
+
+.schedule-list{
+display:flex;
+flex-direction:column;
+gap:22px;
+}
+
+.card{
+background:white;
+border-radius:24px;
+padding:25px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.patient-id{
+font-weight:700;
+color:#2f63e0;
+}
+
+.status{
+padding:8px 16px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+background:#dcfce7;
+color:#15803d;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+
+.box{
+background:#f8fbff;
+padding:15px;
+border-radius:14px;
+}
+
+.label{
+font-size:12px;
+color:#64748b;
+margin-bottom:5px;
+}
+
+.value{
+font-weight:600;
+color:#1f2937;
+}
+
+.highlight{
+margin-top:22px;
+padding:20px;
+background:#eff6ff;
+border:1px solid #bfdbfe;
+border-radius:18px;
+}
+
+.highlight h3{
+color:#2563eb;
+margin-bottom:10px;
+}
+
+.highlight p{
+margin:6px 0;
+color:#334155;
+}
+
+.empty{
+text-align:center;
+padding:80px;
+color:#64748b;
+background:white;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+@media(max-width:700px){
+
+.header{
+padding:16px;
+}
+
+.brand img{
+width:48px;
+}
+
+.brand h2{
+font-size:20px;
+}
+
+.container{
+padding:20px 15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+
+<img src="assets/logo.png" alt="Krishna Hospital Logo">
+
+<div>
+
+<h2>Krishna Hospital</h2>
+
+<small>Mental Wellness Centre</small>
+
+</div>
+
+</div>
+
+<a href="dashboard.html" class="back">← Dashboard</a>
+
+</header>
+
+<div class="container">
+
+<div class="page-title">
+
+<h1>Follow-up Schedule</h1>
+
+<p>Your upcoming follow-up appointments assigned by the hospital.</p>
+
+</div>
+
+<div id="scheduleList" class="schedule-list"></div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+const patientEmail=localStorage.getItem("patient_id");
+
+async function loadFollowups(){
+
+const list=document.getElementById("scheduleList");
+
+list.innerHTML="<div class='empty'><h3>Loading...</h3></div>";
+
+if(!patientEmail){
+
+list.innerHTML=`
+<div class="empty">
+<h3>Patient not logged in.</h3>
+</div>`;
+
+return;
+
+}
+
+try{
+
+const res=await fetch(
+`${API}/patient/followups/${encodeURIComponent(patientEmail)}`
+);
+
+const data=await res.json();
+
+if(!res.ok || !data.success){
+
+throw new Error(data.message || "Unable to fetch follow-up schedule.");
+
+}
+
+if(!data.meetings || data.meetings.length===0){
+
+list.innerHTML=`
+
+<div class="empty">
+
+<h3>No Follow-up Scheduled</h3>
+
+<p>Your next appointment will appear here once scheduled by the hospital.</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+list.innerHTML="";
+
+data.meetings.forEach(item=>{
+
+list.innerHTML+=`
+
+<div class="card">
+
+<div class="top">
+
+<div class="patient-id">
+
+Registration #${item.registration_id}
+
+</div>
+
+<div class="status">${item.attendance_status}</div>
+
+</div>
+
+<div class="grid">
+
+<div class="box">
+
+<div class="label">Child Name</div>
+
+<div class="value">${item.child_name}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Parent Name</div>
+
+<div class="value">${item.parent_name}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Next Meeting Date</div>
+
+<div class="value">📅 ${item.followup_date}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Next Meeting Time</div>
+
+<div class="value">🕒 ${item.followup_time || "-"}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Doctor to Meet</div>
+
+<div class="value">👨‍⚕️ ${item.doctor_name || "-"}</div>
+
+</div>
+
+</div>
+
+<div class="highlight">
+
+<h3>Upcoming Consultation</h3>
+
+<p><strong>Date:</strong> ${item.followup_date}</p>
+
+<p><strong>Time:</strong> ${item.followup_time || "-"}</p>
+
+<p><strong>Doctor:</strong> ${item.doctor_name || "-"}</p>
+
+<p>Please arrive 15 minutes before your scheduled appointment.</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}catch(err){
+
+console.error("Follow-up Error:",err);
+
+list.innerHTML=`
+
+<div class="empty">
+
+<h3>Unable to load schedule.</h3>
+
+<p>${err.message}</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+loadFollowups();
+
+</script>
+
+</body>
+</html>

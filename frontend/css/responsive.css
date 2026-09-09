@@ -1,0 +1,28 @@
+@media(max-width:480px){
+
+    .welcome-card{
+
+        padding:35px 20px;
+    }
+
+    h1{
+
+        font-size:1.7rem;
+    }
+
+    h2{
+
+        font-size:1rem;
+    }
+
+    .logo{
+
+        width:70px;
+        height:70px;
+    }
+
+    .lang-btn{
+
+        padding:10px 18px;
+    }
+}

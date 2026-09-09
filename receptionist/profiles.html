@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Receptionist Profile</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eaf1fb;
+min-height:100vh;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.brand img{
+width:55px;
+}
+
+.brand h2{
+color:#2f63e0;
+}
+
+.brand small{
+color:#64748b;
+}
+
+.back{
+background:#2f63e0;
+color:white;
+text-decoration:none;
+padding:10px 18px;
+border-radius:10px;
+font-weight:600;
+}
+
+.container{
+max-width:720px;
+margin:35px auto;
+padding:20px;
+}
+
+.profile-card{
+background:white;
+padding:35px;
+border-radius:26px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+.profile-top{
+text-align:center;
+margin-bottom:30px;
+}
+
+.avatar{
+width:100px;
+height:100px;
+border-radius:50%;
+background:#2f63e0;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:42px;
+font-weight:700;
+margin:auto;
+margin-bottom:15px;
+}
+
+.profile-top h1{
+color:#2f63e0;
+}
+
+.profile-top p{
+color:#64748b;
+}
+
+.section{
+margin-top:28px;
+}
+
+.section h3{
+color:#2f63e0;
+margin-bottom:16px;
+}
+
+.info-box{
+background:#f8fbff;
+padding:16px;
+border-radius:14px;
+margin-bottom:15px;
+}
+
+.label{
+font-size:13px;
+color:#64748b;
+margin-bottom:5px;
+}
+
+.value{
+font-weight:600;
+color:#1f2937;
+}
+
+.input-group{
+margin-bottom:18px;
+}
+
+.input-group label{
+display:block;
+margin-bottom:8px;
+font-weight:600;
+}
+
+.input-group input{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #d7dce5;
+font-size:15px;
+outline:none;
+}
+
+.input-group input:focus{
+border-color:#2f63e0;
+box-shadow:0 0 0 4px rgba(47,99,224,.12);
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:#2f63e0;
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+button:hover{
+background:#2555c5;
+}
+
+.message{
+margin-top:15px;
+text-align:center;
+font-weight:600;
+}
+
+.success{
+color:#16a34a;
+}
+
+.error{
+color:#dc2626;
+}
+
+@media(max-width:700px){
+
+.header{
+padding:16px;
+}
+
+.container{
+padding:15px;
+}
+
+.profile-card{
+padding:25px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+
+<img src="../assets/logo.png">
+
+<div>
+
+<h2>Krishna Hospital</h2>
+
+<small>Mental Wellness Centre</small>
+
+</div>
+
+</div>
+
+<a href="dashboard.html" class="back">← Dashboard</a>
+
+</header>
+
+<div class="container">
+
+<div class="profile-card">
+
+<div class="profile-top">
+
+<div class="avatar" id="avatarLetter">R</div>
+
+<h1 id="name">Loading...</h1>
+
+<p>Receptionist Profile</p>
+
+</div>
+
+<div class="section">
+
+<h3>Account Information</h3>
+
+<div class="info-box">
+
+<div class="label">Receptionist ID</div>
+
+<div class="value" id="id">Loading...</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="label">Full Name</div>
+
+<div class="value" id="fullName">Loading...</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="label">Email Address</div>
+
+<div class="value" id="email">Loading...</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3>Change Password</h3>
+
+<div class="input-group">
+
+<label>New Password</label>
+
+<input type="password" id="newPassword"
+placeholder="Enter new password">
+
+</div>
+
+<div class="input-group">
+
+<label>Confirm Password</label>
+
+<input type="password" id="confirmPassword"
+placeholder="Confirm new password">
+
+</div>
+
+<button onclick="changePassword()">
+
+Update Password
+
+</button>
+
+<div id="message" class="message"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+const receptionistId=localStorage.getItem("receptionist_id");
+
+if(!receptionistId){
+
+window.location.href="login.html";
+
+}
+
+async function loadProfile(){
+
+try{
+
+const res=await fetch(`${API}/receptionist/profile/${receptionistId}`);
+
+const data=await res.json();
+
+if(!data.success){
+
+alert("Unable to load profile.");
+
+return;
+
+}
+
+const receptionist=data.receptionist;
+
+document.getElementById("id").innerText=
+`RH-${String(receptionist.id).padStart(4,"0")}`;
+
+document.getElementById("name").innerText=
+receptionist.name;
+
+document.getElementById("fullName").innerText=
+receptionist.name;
+
+document.getElementById("email").innerText=
+receptionist.email;
+
+document.getElementById("avatarLetter").innerText=
+receptionist.name.charAt(0).toUpperCase();
+
+}catch(err){
+
+console.error(err);
+
+alert("Server error.");
+
+}
+
+}
+
+async function changePassword(){
+
+const pass=document.getElementById("newPassword").value;
+const confirm=document.getElementById("confirmPassword").value;
+
+const msg=document.getElementById("message");
+
+msg.className="message";
+
+if(!pass||!confirm){
+
+msg.classList.add("error");
+msg.innerText="Please fill both password fields.";
+
+return;
+
+}
+
+if(pass!==confirm){
+
+msg.classList.add("error");
+msg.innerText="Passwords do not match.";
+
+return;
+
+}
+
+try{
+
+const res=await fetch(`${API}/receptionist/change-password`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+receptionist_id:Number(receptionistId),
+new_password:pass
+
+})
+
+});
+
+const data=await res.json();
+
+if(data.success){
+
+msg.classList.add("success");
+msg.innerText="Password updated successfully.";
+
+document.getElementById("newPassword").value="";
+document.getElementById("confirmPassword").value="";
+
+}else{
+
+msg.classList.add("error");
+msg.innerText=data.message;
+
+}
+
+}catch(err){
+
+console.error(err);
+
+msg.classList.add("error");
+msg.innerText="Server error.";
+
+}
+
+}
+
+loadProfile();
+
+</script>
+
+</body>
+</html>

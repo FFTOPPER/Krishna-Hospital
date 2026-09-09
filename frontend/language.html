@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishna Hospital | Select Language</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins','Noto Sans Tamil',sans-serif;
+}
+
+body{
+
+background:#eaf1fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+
+}
+
+.container{
+
+width:100%;
+max-width:700px;
+background:white;
+padding:50px 40px;
+border-radius:30px;
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+text-align:center;
+
+}
+
+.logo{
+
+width:120px;
+margin-bottom:25px;
+
+}
+
+h1{
+
+font-size:42px;
+color:#2f63e0;
+margin-bottom:8px;
+
+}
+
+h2{
+
+font-size:24px;
+color:#1d2433;
+margin-bottom:18px;
+
+}
+
+.subtitle{
+
+font-size:17px;
+color:#5f6b7a;
+margin-bottom:40px;
+line-height:1.6;
+
+}
+
+.language-container{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+
+}
+
+.language-card{
+
+background:#f5f8ff;
+border:3px solid transparent;
+border-radius:22px;
+padding:35px 20px;
+cursor:pointer;
+transition:.25s;
+
+}
+
+.language-card:hover{
+
+transform:translateY(-4px);
+border-color:#2f63e0;
+box-shadow:0 10px 25px rgba(47,99,224,.15);
+
+}
+
+.language-card h3{
+
+font-size:30px;
+color:#2f63e0;
+margin-bottom:8px;
+
+}
+
+.language-card p{
+
+color:#5f6b7a;
+font-size:15px;
+
+}
+
+.footer{
+
+margin-top:35px;
+font-size:14px;
+color:#7a8798;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<img src="assets/logo.png" class="logo" alt="Krishna Hospital Logo">
+
+<h1>Krishna Hospital</h1>
+
+<h2>Mental Wellness Centre</h2>
+
+<p class="subtitle">
+Welcome. Please choose your preferred language to continue your patient registration.
+</p>
+
+<div class="language-container">
+
+<div class="language-card" onclick="selectLanguage('en')">
+
+<h3>English</h3>
+
+<p>Continue in English</p>
+
+</div>
+
+<div class="language-card" onclick="selectLanguage('ta')">
+
+<h3>தமிழ்</h3>
+
+<p>தமிழில் தொடரவும்</p>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+Your selected language will remain active throughout the registration process.
+
+</div>
+
+</div>
+
+<script>
+
+function selectLanguage(lang){
+
+// Save language preference
+localStorage.setItem("language",lang);
+
+// Redirect to dashboard
+window.location.href="dashboard.html";
+
+}
+
+</script>
+
+</body>
+</html>

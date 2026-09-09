@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Follow-up Scheduler</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#eef5ff;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.header a{
+background:#2f63e0;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+text-decoration:none;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:30px;
+}
+
+.title{
+margin-bottom:25px;
+}
+
+.title h1{
+color:#2f63e0;
+}
+
+.filters{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:25px;
+}
+
+.filter-btn{
+padding:10px 18px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+background:white;
+color:#2f63e0;
+font-weight:600;
+box-shadow:0 3px 8px rgba(0,0,0,.08);
+}
+
+.filter-btn.active{
+background:#2f63e0;
+color:white;
+}
+
+.list{
+display:flex;
+flex-direction:column;
+gap:22px;
+}
+
+.card{
+background:white;
+padding:24px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin:20px 0;
+}
+
+.box{
+background:#f8fbff;
+padding:14px;
+border-radius:12px;
+}
+
+.label{
+font-size:12px;
+color:#64748b;
+}
+
+.value{
+font-weight:600;
+margin-top:4px;
+}
+
+.status{
+display:inline-block;
+padding:8px 16px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+margin-bottom:15px;
+}
+
+.new{
+background:#fff7d6;
+color:#c08400;
+}
+
+.attended{
+background:#dcfce7;
+color:#15803d;
+}
+
+.notattended{
+background:#fee2e2;
+color:#dc2626;
+}
+
+.followup-box{
+background:#ecfdf5;
+border:1px solid #bbf7d0;
+padding:16px;
+border-radius:14px;
+margin-bottom:18px;
+}
+
+.actions{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+}
+
+button.action{
+padding:12px 20px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+
+.btn-attended{
+background:#16a34a;
+color:white;
+}
+
+.btn-not{
+background:#dc2626;
+color:white;
+}
+
+.disabled{
+background:#cbd5e1;
+cursor:not-allowed;
+color:#475569;
+}
+
+.modal{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,.45);
+z-index:100;
+}
+
+.modal-box{
+background:white;
+padding:28px;
+border-radius:18px;
+width:95%;
+max-width:430px;
+}
+
+.modal-box h3{
+color:#2f63e0;
+margin-bottom:18px;
+}
+
+.modal-box label{
+display:block;
+margin:10px 0 6px;
+font-weight:600;
+}
+
+.modal-box input{
+width:100%;
+padding:12px;
+border:1px solid #d6dce7;
+border-radius:10px;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:20px;
+}
+
+.save{
+background:#16a34a;
+color:white;
+}
+
+.cancel{
+background:#e5e7eb;
+}
+
+.empty{
+text-align:center;
+padding:60px;
+color:#64748b;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<h2 style="color:#2f63e0">Follow-up Scheduler</h2>
+
+<a href="dashboard.html">← Dashboard</a>
+
+</header>
+
+<div class="container">
+
+<div class="title">
+
+<h1>Follow-up Management</h1>
+
+<p>Record attendance and schedule future consultations.</p>
+
+</div>
+
+<div class="filters">
+
+<button class="filter-btn active" onclick="setFilter('new',this)">
+New Follow-up
+</button>
+
+<button class="filter-btn" onclick="setFilter('attended',this)">
+Follow-up Scheduled
+</button>
+
+<button class="filter-btn" onclick="setFilter('notattended',this)">
+Did Not Attend
+</button>
+
+<button class="filter-btn" onclick="setFilter('all',this)">
+All
+</button>
+
+</div>
+
+<div id="patientList" class="list"></div>
+
+</div>
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<h3>Schedule Follow-up</h3>
+
+<label>Follow-up Date</label>
+
+<input type="date" id="followDate">
+
+<label>Follow-up Time</label>
+
+<input type="time" id="followTime">
+
+<label>Doctor to Meet</label>
+
+<input id="doctorName" placeholder="Doctor Name">
+
+<div class="modal-actions">
+
+<button class="cancel" onclick="closeModal()">Cancel</button>
+
+<button class="save" onclick="saveFollowup()">Save</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+const receptionistId=localStorage.getItem("receptionist_id");
+
+let currentRegistration=null;
+let patients=[];
+let currentFilter="new";
+
+async function loadPatients(){
+
+const list=document.getElementById("patientList");
+
+list.innerHTML="<div class='empty'>Loading...</div>";
+
+try{
+
+const res=await fetch(`${API}/receptionist/followup-list`);
+
+const data=await res.json();
+
+if(!data.success){
+
+list.innerHTML="<div class='empty'>Unable to load.</div>";
+
+return;
+
+}
+
+patients=data.patients;
+
+renderPatients();
+
+}catch{
+
+list.innerHTML="<div class='empty'>Server error.</div>";
+
+}
+
+}
+
+function setFilter(filter,btn){
+
+currentFilter=filter;
+
+document.querySelectorAll(".filter-btn")
+.forEach(button=>button.classList.remove("active"));
+
+btn.classList.add("active");
+
+renderPatients();
+
+}
+
+function renderPatients(){
+
+const list=document.getElementById("patientList");
+
+let filtered=[...patients];
+
+filtered.sort((a,b)=>{
+
+const priority=statusPriority(a.attendance_status)-statusPriority(b.attendance_status);
+
+if(priority!==0) return priority;
+
+return b.registration_id-a.registration_id;
+
+});
+
+filtered=filtered.filter(patient=>{
+
+if(currentFilter==="all") return true;
+
+if(currentFilter==="new")
+return !patient.attendance_status;
+
+if(currentFilter==="attended")
+return patient.attendance_status==="Attended";
+
+if(currentFilter==="notattended")
+return patient.attendance_status==="Did Not Attend";
+
+});
+
+if(filtered.length===0){
+
+list.innerHTML="<div class='empty'>No records available.</div>";
+
+return;
+
+}
+
+list.innerHTML="";
+
+filtered.forEach(patient=>{
+
+const statusClass=
+!patient.attendance_status?"new":
+patient.attendance_status==="Attended"?"attended":"notattended";
+
+const statusText=
+!patient.attendance_status?"New Follow-up":
+patient.attendance_status;
+
+list.innerHTML+=`
+
+<div class="card">
+
+<div class="status ${statusClass}">
+${statusText}
+</div>
+
+<h3 style="color:#2f63e0">
+KH-${String(patient.patient_id).padStart(4,"0")}
+</h3>
+
+<div class="grid">
+
+<div class="box">
+<div class="label">Child</div>
+<div class="value">${patient.child_name}</div>
+</div>
+
+<div class="box">
+<div class="label">Parent</div>
+<div class="value">${patient.parent_name}</div>
+</div>
+
+<div class="box">
+<div class="label">Appointment Date</div>
+<div class="value">${patient.visit_date}</div>
+</div>
+
+<div class="box">
+<div class="label">Appointment Time</div>
+<div class="value">${patient.visit_time}</div>
+</div>
+
+</div>
+
+${patient.attendance_status==="Attended"?`
+
+<div class="followup-box">
+
+<div class="grid">
+
+<div class="box">
+<div class="label">Next Follow-up Date</div>
+<div class="value">${patient.followup_date||"-"}</div>
+</div>
+
+<div class="box">
+<div class="label">Next Follow-up Time</div>
+<div class="value">${patient.followup_time||"-"}</div>
+</div>
+
+<div class="box">
+<div class="label">Doctor</div>
+<div class="value">${patient.doctor_name||"-"}</div>
+</div>
+
+</div>
+
+</div>
+
+`:""}
+
+<div class="actions">
+
+<button class="action ${patient.attendance_status?'disabled':'btn-attended'}"
+
+${patient.attendance_status?'disabled':''}
+
+onclick="openModal(${patient.registration_id})">
+
+Attended
+
+</button>
+
+<button class="action ${patient.attendance_status?'disabled':'btn-not'}"
+
+${patient.attendance_status?'disabled':''}
+
+onclick="markNotAttended(${patient.registration_id})">
+
+Did Not Attend
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function statusPriority(status){
+
+if(!status) return 0;
+
+if(status==="Attended") return 1;
+
+return 2;
+
+}
+
+function openModal(id){
+
+currentRegistration=id;
+
+followDate.value="";
+followTime.value="";
+doctorName.value="";
+
+modal.style.display="flex";
+
+}
+
+function closeModal(){
+
+modal.style.display="none";
+
+}
+
+async function saveFollowup(){
+
+if(!followDate.value||!followTime.value||!doctorName.value.trim()){
+
+alert("Please complete all fields.");
+
+return;
+
+}
+
+const res=await fetch(`${API}/receptionist/followup`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+registration_id:currentRegistration,
+
+receptionist_id:Number(receptionistId),
+
+attendance_status:"Attended",
+
+followup_date:followDate.value,
+
+followup_time:followTime.value,
+
+doctor_name:doctorName.value
+
+})
+
+});
+
+const data=await res.json();
+
+if(data.success){
+
+const patient=patients.find(p=>p.registration_id===currentRegistration);
+
+if(patient){
+
+patient.attendance_status="Attended";
+patient.followup_date=followDate.value;
+patient.followup_time=followTime.value;
+patient.doctor_name=doctorName.value;
+
+}
+
+closeModal();
+
+renderPatients();
+
+}
+
+}
+
+async function markNotAttended(id){
+
+if(!confirm("Mark this patient as Did Not Attend?")) return;
+
+const res=await fetch(`${API}/receptionist/followup`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+registration_id:id,
+
+receptionist_id:Number(receptionistId),
+
+attendance_status:"Did Not Attend"
+
+})
+
+});
+
+const data=await res.json();
+
+if(data.success){
+
+const patient=patients.find(p=>p.registration_id===id);
+
+if(patient){
+
+patient.attendance_status="Did Not Attend";
+
+}
+
+renderPatients();
+
+}
+
+}
+
+loadPatients();
+
+</script>
+
+</body>
+</html>

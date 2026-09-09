@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Receptionist Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eaf1fb;
+min-height:100vh;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.brand img{
+width:55px;
+}
+
+.brand h2{
+color:#2f63e0;
+}
+
+.brand small{
+color:#64748b;
+}
+
+/* Clickable Profile */
+
+.profile{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+padding:6px 10px;
+border-radius:14px;
+transition:.25s;
+}
+
+.profile:hover{
+background:#f3f7ff;
+}
+
+.profile-circle{
+width:45px;
+height:45px;
+border-radius:50%;
+background:#2f63e0;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:700;
+font-size:18px;
+}
+
+#nameText{
+font-weight:600;
+color:#1f2937;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:35px 20px;
+}
+
+.welcome{
+background:white;
+padding:35px;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+margin-bottom:35px;
+}
+
+.welcome h1{
+color:#2f63e0;
+margin-bottom:8px;
+}
+
+.welcome p{
+color:#64748b;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:24px;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+cursor:pointer;
+transition:.25s;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 18px 40px rgba(47,99,224,.12);
+}
+
+.icon{
+font-size:46px;
+}
+
+.card h3{
+color:#2f63e0;
+font-size:22px;
+}
+
+.card p{
+color:#64748b;
+line-height:1.6;
+}
+
+.logout{
+margin-top:35px;
+padding:15px 26px;
+background:#e53935;
+border:none;
+border-radius:12px;
+color:white;
+cursor:pointer;
+font-size:15px;
+font-weight:600;
+transition:.25s;
+}
+
+.logout:hover{
+background:#d32f2f;
+}
+
+@media(max-width:700px){
+
+.header{
+padding:16px;
+}
+
+.brand img{
+width:48px;
+}
+
+.brand h2{
+font-size:20px;
+}
+
+.container{
+padding:25px 15px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+
+<img src="../assets/logo.png" alt="Krishna Hospital Logo">
+
+<div>
+
+<h2>Krishna Hospital</h2>
+
+<small>Mental Wellness Centre</small>
+
+</div>
+
+</div>
+
+<!-- Clickable Profile -->
+<div class="profile" onclick="window.location.href='profiles.html'">
+
+<div class="profile-circle" id="initials">R</div>
+
+<div id="nameText"></div>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="welcome">
+
+<h1>Receptionist Dashboard</h1>
+
+<p id="welcomeText">Loading...</p>
+
+</div>
+
+<div class="grid">
+
+<!-- Patient Queue -->
+<div class="card" onclick="window.location.href='queue.html'">
+
+<div class="icon">📋</div>
+
+<h3>Patient Queue</h3>
+
+<p>
+View all patient registrations and manage appointment confirmations or rejections.
+</p>
+
+</div>
+
+<!-- Confirmed Registrations -->
+<div class="card" onclick="window.location.href='confirmed.html'">
+
+<div class="icon">✅</div>
+
+<h3>Confirmed Registrations</h3>
+
+<p>
+View confirmed patients along with their scheduled appointment date and time.
+</p>
+
+</div>
+
+<!-- Schedule Follow Up -->
+<div class="card" onclick="window.location.href='followup.html'">
+
+<div class="icon">🔄</div>
+
+<h3>Schedule Follow Up</h3>
+
+<p>
+Manage follow-up visits for confirmed patients by recording attendance and scheduling the next consultation.
+</p>
+
+</div>
+
+</div>
+
+<button class="logout" onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+<script>
+
+const name = localStorage.getItem("receptionist_name") || "Receptionist";
+
+document.getElementById("welcomeText").innerText =
+`Welcome back, ${name}`;
+
+document.getElementById("nameText").innerText = name;
+
+document.getElementById("initials").innerText =
+name.charAt(0).toUpperCase();
+
+function logout(){
+
+localStorage.removeItem("receptionist_id");
+localStorage.removeItem("receptionist_name");
+
+window.location.href="login.html";
+
+}
+
+</script>
+
+</body>
+</html>

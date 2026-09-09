@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishna Hospital | Child Guidance Centre</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eaf1fb 0%,#d8e8ff 100%);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.welcome-card{
+background:white;
+width:100%;
+max-width:500px;
+padding:45px 35px;
+border-radius:30px;
+text-align:center;
+box-shadow:0 20px 50px rgba(47,99,224,.12);
+animation:fadeUp .6s ease;
+}
+
+.logo{
+width:110px;
+margin-bottom:20px;
+}
+
+h1{
+color:#2f63e0;
+font-size:32px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+h2{
+color:#475569;
+font-size:20px;
+font-weight:500;
+margin-bottom:20px;
+}
+
+p{
+color:#64748b;
+font-size:15px;
+line-height:1.7;
+margin-bottom:12px;
+}
+
+.trust-text{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:30px;
+}
+
+.start-btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+background:#2f63e0;
+color:white;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 8px 20px rgba(47,99,224,.25);
+}
+
+.start-btn:hover{
+background:#2553c9;
+transform:translateY(-2px);
+box-shadow:0 12px 28px rgba(47,99,224,.35);
+}
+
+.footer{
+margin-top:28px;
+font-size:13px;
+color:#94a3b8;
+}
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(25px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@media(max-width:480px){
+
+.welcome-card{
+padding:35px 25px;
+}
+
+.logo{
+width:90px;
+}
+
+h1{
+font-size:27px;
+}
+
+h2{
+font-size:18px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="welcome-card">
+
+<img src="../assets/logo.png" alt="Krishna Hospital Logo" class="logo">
+
+<h1>Krishna Hospital</h1>
+
+<h2>Child Guidance Centre</h2>
+
+<p>
+Complete your child's registration before visiting the hospital.
+</p>
+
+<p class="trust-text">
+Secure digital patient registration for Krishna Hospital.
+</p>
+
+<button class="start-btn" onclick="goToLogin()">
+Get Started
+</button>
+
+<div class="footer">
+© Krishna Hospital Child Guidance Centre
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function goToLogin(){
+
+window.location.href="login.html";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Doctor Dashboard | Krishna Hospital</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eef5ff;
+min-height:100vh;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.brand img{
+width:55px;
+}
+
+.brand h2{
+color:#2f63e0;
+}
+
+.profile{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition:.2s;
+}
+
+.profile:hover{
+background:#f3f7ff;
+}
+
+.profile-circle{
+width:46px;
+height:46px;
+border-radius:50%;
+background:#2f63e0;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-weight:700;
+font-size:18px;
+}
+
+.container{
+max-width:1250px;
+margin:auto;
+padding:30px 20px;
+}
+
+.welcome{
+background:white;
+padding:30px;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+margin-bottom:25px;
+}
+
+.welcome h1{
+color:#2f63e0;
+margin-bottom:8px;
+}
+
+.welcome p{
+color:#64748b;
+}
+
+.tabs{
+display:flex;
+gap:12px;
+margin-bottom:25px;
+flex-wrap:wrap;
+}
+
+.tab{
+padding:12px 22px;
+border-radius:12px;
+background:white;
+cursor:pointer;
+font-weight:600;
+transition:.25s;
+}
+
+.tab.active{
+background:#2f63e0;
+color:white;
+}
+
+.list{
+display:flex;
+flex-direction:column;
+gap:22px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:22px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.patient-id{
+font-weight:700;
+color:#2f63e0;
+font-size:18px;
+}
+
+.badge{
+background:#dcfce7;
+color:#15803d;
+padding:7px 15px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:16px;
+margin-bottom:18px;
+}
+
+.box{
+background:#f8fbff;
+padding:14px;
+border-radius:12px;
+}
+
+.label{
+font-size:12px;
+color:#64748b;
+margin-bottom:5px;
+}
+
+.value{
+font-weight:600;
+color:#1f2937;
+}
+
+.section{
+margin-top:18px;
+padding:18px;
+border-radius:16px;
+background:#f8fbff;
+}
+
+.section h4{
+color:#2f63e0;
+margin-bottom:10px;
+}
+
+.section p{
+line-height:1.7;
+color:#334155;
+}
+
+.empty{
+text-align:center;
+padding:60px;
+background:white;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+color:#64748b;
+}
+
+.logout{
+margin-top:30px;
+background:#e53935;
+color:white;
+border:none;
+padding:14px 26px;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+transition:.25s;
+}
+
+.logout:hover{
+background:#d32f2f;
+}
+
+@media(max-width:700px){
+
+.header{
+padding:16px;
+}
+
+.brand img{
+width:48px;
+}
+
+.brand h2{
+font-size:20px;
+}
+
+.container{
+padding:20px 15px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+
+<img src="../assets/logo.png">
+
+<div>
+
+<h2>Krishna Hospital</h2>
+
+<small>Mental Wellness Centre</small>
+
+</div>
+
+</div>
+
+<div class="profile" onclick="window.location.href='docprofile.html'">
+
+<div class="profile-circle" id="initial">D</div>
+
+<div id="doctorName"></div>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="welcome">
+
+<h1>Doctor Dashboard</h1>
+
+<p id="welcomeText">Loading...</p>
+
+</div>
+
+<div class="tabs">
+
+<div class="tab active" onclick="switchTab('today',this)">
+
+Today's Patients
+
+</div>
+
+<div class="tab" onclick="switchTab('upcoming',this)">
+
+Upcoming Patients
+
+</div>
+
+</div>
+
+<div id="patientList" class="list"></div>
+
+<button class="logout" onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+const doctorName=localStorage.getItem("doctor_name") || "Doctor";
+
+doctorNameElement=document.getElementById("doctorName");
+doctorNameElement.innerText=doctorName;
+
+welcomeText.innerText=`Welcome back, Dr. ${doctorName}`;
+
+initial.innerText=doctorName.charAt(0).toUpperCase();
+
+let todayPatients=[];
+let upcomingPatients=[];
+let currentTab="today";
+
+async function loadPatients(){
+
+try{
+
+const res=await fetch(`${API}/doctor/patients`);
+
+const data=await res.json();
+
+if(!data.success){
+
+patientList.innerHTML="<div class='empty'>Unable to load patients.</div>";
+
+return;
+
+}
+
+todayPatients=data.today || [];
+upcomingPatients=data.upcoming || [];
+
+render(todayPatients);
+
+}catch(err){
+
+console.error(err);
+
+patientList.innerHTML="<div class='empty'>Server connection failed.</div>";
+
+}
+
+}
+
+function render(list){
+
+patientList.innerHTML="";
+
+if(list.length===0){
+
+patientList.innerHTML=`
+<div class="empty">
+<h3>No ${currentTab==="today"?"Today's":"Upcoming"} Patients Found</h3>
+<p>There are currently no confirmed appointments.</p>
+</div>`;
+
+return;
+
+}
+
+list.forEach(patient=>{
+
+patientList.innerHTML+=`
+
+<div class="card">
+
+<div class="top">
+
+<div class="patient-id">
+
+KH-${String(patient.patient_id).padStart(4,"0")}
+
+</div>
+
+<div class="badge">Confirmed</div>
+
+</div>
+
+<div class="grid">
+
+<div class="box">
+
+<div class="label">Registration ID</div>
+
+<div class="value">#${patient.registration_id}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Child Name</div>
+
+<div class="value">${patient.child_name}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Parent Name</div>
+
+<div class="value">${patient.parent_name}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Age</div>
+
+<div class="value">${patient.age}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Gender</div>
+
+<div class="value">${patient.gender}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Date of Birth</div>
+
+<div class="value">${patient.dob}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Consultation Date</div>
+
+<div class="value">${patient.consultation_date}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Appointment Date</div>
+
+<div class="value">📅 ${patient.visit_date}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Appointment Time</div>
+
+<div class="value">🕒 ${patient.visit_time}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Referred By</div>
+
+<div class="value">${patient.referred_by || "-"}</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">Parent Education & Occupation</div>
+
+<div class="value">${patient.parent_education_occupation || "-"}</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h4>Address</h4>
+
+<p>${patient.address || "No address provided."}</p>
+
+</div>
+
+<div class="section">
+
+<h4>Consultation Complaints</h4>
+
+<p>${patient.consultation_complaints || "No complaints provided."}</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function switchTab(type,element){
+
+currentTab=type;
+
+document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
+
+element.classList.add("active");
+
+render(type==="today" ? todayPatients : upcomingPatients);
+
+}
+
+function logout(){
+
+localStorage.removeItem("doctor_logged_in");
+localStorage.removeItem("doctor_id");
+localStorage.removeItem("doctor_name");
+localStorage.removeItem("doctor_email");
+
+window.location.href="doctor_login.html";
+
+}
+
+loadPatients();
+
+</script>
+
+</body>
+</html>

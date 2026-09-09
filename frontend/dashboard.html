@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishna Hospital | Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eaf1fb;
+min-height:100vh;
+}
+
+.header{
+background:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.brand img{
+width:55px;
+}
+
+.brand h2{
+color:#2f63e0;
+font-size:24px;
+}
+
+.brand small{
+color:#64748b;
+}
+
+.header-actions{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+/* Notification */
+
+.notification-btn{
+position:relative;
+width:50px;
+height:50px;
+border-radius:50%;
+background:white;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+transition:.25s;
+}
+
+.notification-btn:hover{
+transform:scale(1.05);
+}
+
+.notification-btn span:first-child{
+font-size:24px;
+}
+
+.badge{
+position:absolute;
+top:5px;
+right:5px;
+background:#ef4444;
+color:white;
+font-size:11px;
+font-weight:600;
+padding:3px 7px;
+border-radius:999px;
+display:none;
+}
+
+/* Profile */
+
+.profile-btn{
+width:50px;
+height:50px;
+border-radius:50%;
+background:#2f63e0;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+overflow:hidden;
+transition:.25s;
+}
+
+.profile-btn:hover{
+transform:scale(1.05);
+}
+
+.profile-btn img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.profile-btn span{
+font-size:24px;
+color:white;
+}
+
+/* Notification Panel */
+
+.notification-panel{
+position:fixed;
+top:80px;
+right:25px;
+width:340px;
+background:white;
+border-radius:18px;
+box-shadow:0 15px 35px rgba(0,0,0,.18);
+display:none;
+overflow:hidden;
+z-index:999;
+max-height:420px;
+}
+
+.notification-header{
+padding:18px;
+background:#2f63e0;
+color:white;
+font-weight:600;
+}
+
+.notification-list{
+max-height:340px;
+overflow:auto;
+}
+
+.notification-item{
+padding:15px;
+border-bottom:1px solid #edf2f7;
+}
+
+.notification-item:last-child{
+border-bottom:none;
+}
+
+.notification-item h4{
+font-size:15px;
+color:#1f2937;
+margin-bottom:5px;
+}
+
+.notification-item p{
+font-size:13px;
+color:#64748b;
+line-height:1.5;
+}
+
+/* Welcome */
+
+.container{
+max-width:1100px;
+margin:35px auto;
+padding:20px;
+}
+
+.welcome{
+background:white;
+padding:35px;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+margin-bottom:35px;
+}
+
+.welcome h1{
+color:#2f63e0;
+margin-bottom:8px;
+}
+
+.welcome p{
+color:#64748b;
+}
+
+/* Cards */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:24px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+cursor:pointer;
+transition:.25s;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 18px 40px rgba(47,99,224,.12);
+}
+
+.icon{
+font-size:42px;
+}
+
+.card h3{
+color:#2f63e0;
+font-size:22px;
+}
+
+.card p{
+color:#64748b;
+line-height:1.6;
+}
+
+@media(max-width:600px){
+
+.header{
+padding:15px;
+}
+
+.brand h2{
+font-size:20px;
+}
+
+.container{
+padding:15px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.notification-panel{
+right:10px;
+left:10px;
+width:auto;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+<img src="assets/logo.png" alt="Krishna Hospital Logo">
+<div>
+<h2>Krishna Hospital</h2>
+<small>Mental Wellness Centre</small>
+</div>
+</div>
+
+<div class="header-actions">
+
+<!-- Notification Bell -->
+
+<div class="notification-btn" onclick="toggleNotifications()">
+
+<span>🔔</span>
+
+<div class="badge" id="notificationCount">0</div>
+
+</div>
+
+<!-- Profile -->
+
+<div class="profile-btn" onclick="window.location.href='profile.html'">
+
+<img id="topAvatar" style="display:none;">
+
+<span id="topIcon">👤</span>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- Notification Panel -->
+
+<div class="notification-panel" id="notificationPanel">
+
+<div class="notification-header">
+Notifications
+</div>
+
+<div class="notification-list" id="notificationList">
+
+<div class="notification-item">
+<p>No notifications yet.</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="welcome">
+
+<h1>Welcome</h1>
+
+<p id="welcomeUser">Loading your account...</p>
+
+</div>
+
+<div class="grid">
+
+<!-- Registration Form -->
+
+<div class="card" onclick="window.location.href='patient_registration.html'">
+
+<div class="icon">📝</div>
+
+<h3>Fill Registration Form</h3>
+
+<p>Complete your Child Consultation Registration Form before visiting the hospital.</p>
+
+</div>
+
+<!-- Registration Status -->
+
+<div class="card" onclick="window.location.href='registration_status.html'">
+
+<div class="icon">📋</div>
+
+<h3>Registration Status</h3>
+
+<p>View whether your registration is Pending, Confirmed or Completed.</p>
+
+</div>
+
+<!-- My Activities -->
+
+<div class="card" onclick="window.location.href='my_activities.html'">
+
+<div class="icon">📜</div>
+
+<h3>My Activities</h3>
+
+<p>View all your previous consultation registrations and their current status.</p>
+
+</div>
+
+<!-- NEW FOLLOW-UP CARD -->
+
+<div class="card" onclick="window.location.href='nextmeet.html'">
+
+<div class="icon">📅</div>
+
+<h3>Follow-up Schedule</h3>
+
+<p>View your upcoming follow-up appointments, meeting date, time and the doctor assigned for your next visit.</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+const patientEmail=localStorage.getItem("patient_id") || "Guest";
+const patientNumericId=localStorage.getItem("patient_numeric_id");
+
+document.getElementById("welcomeUser").innerText=
+`Welcome back, ${patientEmail}`;
+
+/* Profile Picture */
+
+async function loadProfile(){
+
+if(patientEmail==="Guest") return;
+
+try{
+
+const response=await fetch(`${API}/patient-profile/${patientEmail}`);
+
+const data=await response.json();
+
+if(data.success){
+
+const profilePic=data.patient.profile_picture;
+
+if(profilePic){
+
+topAvatar.src=profilePic;
+topAvatar.style.display="block";
+topIcon.style.display="none";
+
+}
+
+}
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+/* Notifications */
+
+async function loadNotifications(){
+
+if(!patientNumericId) return;
+
+try{
+
+const res=await fetch(`${API}/notifications/${patientNumericId}`);
+
+const data=await res.json();
+
+if(!data.success) return;
+
+const unread=data.notifications.filter(n=>n.is_read==="No");
+
+const badge=document.getElementById("notificationCount");
+
+badge.innerText=unread.length;
+
+badge.style.display=unread.length?"block":"none";
+
+const list=document.getElementById("notificationList");
+
+list.innerHTML="";
+
+if(data.notifications.length===0){
+
+list.innerHTML=`
+<div class="notification-item">
+<p>No notifications yet.</p>
+</div>`;
+
+return;
+
+}
+
+data.notifications.forEach(n=>{
+
+list.innerHTML+=`
+
+<div class="notification-item">
+
+<h4>${n.title}</h4>
+
+<p>${n.message}</p>
+
+</div>
+
+`;
+
+});
+
+if(unread.length){
+
+alert(`🔔 You have ${unread.length} new notification(s).`);
+
+await fetch(`${API}/notifications/mark-read`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+patient_id:Number(patientNumericId)
+
+})
+
+});
+
+badge.style.display="none";
+
+}
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+function toggleNotifications(){
+
+const panel=document.getElementById("notificationPanel");
+
+panel.style.display=
+panel.style.display==="block"?"none":"block";
+
+}
+
+/* Close notification panel */
+
+document.addEventListener("click",function(e){
+
+const panel=document.getElementById("notificationPanel");
+
+const bell=document.querySelector(".notification-btn");
+
+if(!panel.contains(e.target) && !bell.contains(e.target)){
+
+panel.style.display="none";
+
+}
+
+});
+
+loadProfile();
+loadNotifications();
+
+</script>
+
+</body>
+</html>

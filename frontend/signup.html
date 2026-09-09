@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishna Hospital | Sign Up</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins','Noto Sans Tamil',sans-serif;
+}
+
+body{
+background:#eaf1fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:520px;
+background:white;
+padding:40px;
+border-radius:28px;
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+}
+
+.logo{
+display:flex;
+justify-content:center;
+margin-bottom:15px;
+}
+
+.logo img{
+width:70px;
+}
+
+h1{
+color:#2f63e0;
+text-align:center;
+font-size:38px;
+line-height:1.1;
+margin-bottom:8px;
+}
+
+h2{
+text-align:center;
+font-size:22px;
+margin-bottom:18px;
+color:#1d2433;
+}
+
+.desc{
+text-align:center;
+color:#5f6b7a;
+line-height:1.6;
+margin-bottom:25px;
+}
+
+.language{
+display:flex;
+justify-content:center;
+gap:12px;
+margin-bottom:28px;
+}
+
+.language button{
+border:none;
+padding:12px 26px;
+border-radius:12px;
+cursor:pointer;
+font-size:15px;
+font-weight:500;
+background:#e2e5ea;
+color:#333;
+transition:.25s;
+}
+
+.language button.active{
+background:#2f63e0;
+color:white;
+}
+
+.input-group{
+margin-bottom:18px;
+}
+
+label{
+display:block;
+font-size:14px;
+margin-bottom:7px;
+font-weight:500;
+color:#2b2b2b;
+}
+
+input{
+width:100%;
+padding:15px;
+border-radius:12px;
+border:1px solid #d5dbe5;
+font-size:15px;
+outline:none;
+transition:.2s;
+}
+
+input:focus{
+border-color:#2f63e0;
+box-shadow:0 0 0 4px rgba(47,99,224,.12);
+}
+
+button.submit{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+background:#2f63e0;
+color:white;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+margin-top:10px;
+transition:.2s;
+}
+
+button.submit:hover{
+transform:translateY(-1px);
+}
+
+.footer{
+text-align:center;
+margin-top:20px;
+font-size:14px;
+color:#5f6b7a;
+}
+
+.footer a{
+color:#2f63e0;
+text-decoration:none;
+font-weight:600;
+}
+
+.message{
+margin-top:15px;
+text-align:center;
+font-weight:600;
+}
+
+.success{
+color:#1d8f42;
+}
+
+.error{
+color:#d32f2f;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="assets/logo.png" alt="Krishna Hospital Logo">
+</div>
+
+<h1 id="title">Krishna Hospital</h1>
+<h2 id="subtitle">Child Guidance Centre</h2>
+
+<p class="desc" id="desc">
+Create your patient account to complete registration before your hospital visit.
+</p>
+
+<div class="language">
+<button type="button" id="enBtn" class="active">English</button>
+<button type="button" id="taBtn">தமிழ்</button>
+</div>
+
+<form id="signupForm">
+
+<div class="input-group">
+<label id="emailLabel" for="email">Email or Phone Number</label>
+<input
+type="text"
+id="email"
+placeholder="Enter email or phone"
+required>
+</div>
+
+<div class="input-group">
+<label id="passwordLabel" for="password">Password</label>
+<input
+type="password"
+id="password"
+placeholder="Create password"
+required>
+</div>
+
+<div class="input-group">
+<label id="confirmLabel" for="confirmPassword">Confirm Password</label>
+<input
+type="password"
+id="confirmPassword"
+placeholder="Re-enter password"
+required>
+</div>
+
+<button class="submit" id="submitBtn" type="submit">
+Create Account
+</button>
+
+</form>
+
+<div id="message" class="message"></div>
+
+<div class="footer">
+<span id="loginText">Already have an account?</span>
+<a href="login.html" id="loginLink">Login</a>
+</div>
+
+</div>
+
+<script>
+
+const API = "http://127.0.0.1:8000";
+let lang = "en";
+
+const txt = {
+  en: {
+    title: "Krishna Hospital",
+    subtitle: "Child Guidance Centre",
+    desc: "Create your patient account to complete registration before your hospital visit.",
+    email: "Email or Phone Number",
+    password: "Password",
+    confirm: "Confirm Password",
+    emailPH: "Enter email or phone",
+    passPH: "Create password",
+    confirmPH: "Re-enter password",
+    btn: "Create Account",
+    already: "Already have an account?",
+    login: "Login",
+    fill: "Please fill all fields.",
+    match: "Passwords do not match.",
+    success: "Account created successfully! Redirecting...",
+    exists: "Account already exists.",
+    error: "Unable to connect to the server."
+  },
+  ta: {
+    title: "கிருஷ்ணா மருத்துவமனை",
+    subtitle: "குழந்தைகள் வழிகாட்டல் மையம்",
+    desc: "மருத்துவமனைக்கு வருவதற்கு முன் உங்கள் கணக்கை உருவாக்கவும்.",
+    email: "மின்னஞ்சல் அல்லது தொலைபேசி எண்",
+    password: "கடவுச்சொல்",
+    confirm: "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
+    emailPH: "மின்னஞ்சல் அல்லது தொலைபேசி எண்ணை உள்ளிடவும்",
+    passPH: "கடவுச்சொல்லை உருவாக்கவும்",
+    confirmPH: "மீண்டும் கடவுச்சொல்லை உள்ளிடவும்",
+    btn: "கணக்கை உருவாக்கவும்",
+    already: "ஏற்கனவே கணக்கு உள்ளதா?",
+    login: "உள்நுழையவும்",
+    fill: "அனைத்து விவரங்களையும் நிரப்பவும்.",
+    match: "கடவுச்சொற்கள் பொருந்தவில்லை.",
+    success: "கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது!",
+    exists: "இந்த பயனர் ஏற்கனவே உள்ளார்.",
+    error: "சர்வருடன் இணைக்க முடியவில்லை."
+  }
+};
+
+const titleEl = document.getElementById("title");
+const subtitleEl = document.getElementById("subtitle");
+const descEl = document.getElementById("desc");
+const emailLabel = document.getElementById("emailLabel");
+const passwordLabel = document.getElementById("passwordLabel");
+const confirmLabel = document.getElementById("confirmLabel");
+const submitBtn = document.getElementById("submitBtn");
+const loginText = document.getElementById("loginText");
+const loginLink = document.getElementById("loginLink");
+
+const enBtn = document.getElementById("enBtn");
+const taBtn = document.getElementById("taBtn");
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmInput = document.getElementById("confirmPassword");
+const signupForm = document.getElementById("signupForm");
+const message = document.getElementById("message");
+
+function setLanguage(l){
+
+lang=l;
+
+titleEl.innerText=txt[l].title;
+subtitleEl.innerText=txt[l].subtitle;
+descEl.innerText=txt[l].desc;
+
+emailLabel.innerText=txt[l].email;
+passwordLabel.innerText=txt[l].password;
+confirmLabel.innerText=txt[l].confirm;
+
+emailInput.placeholder=txt[l].emailPH;
+passwordInput.placeholder=txt[l].passPH;
+confirmInput.placeholder=txt[l].confirmPH;
+
+submitBtn.innerText=txt[l].btn;
+loginText.innerText=txt[l].already;
+loginLink.innerText=txt[l].login;
+
+enBtn.classList.toggle("active",l==="en");
+taBtn.classList.toggle("active",l==="ta");
+
+}
+
+enBtn.addEventListener("click",()=>setLanguage("en"));
+taBtn.addEventListener("click",()=>setLanguage("ta"));
+
+signupForm.addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+message.className="message";
+
+const email=emailInput.value.trim();
+const password=passwordInput.value;
+const confirm=confirmInput.value;
+
+if(!email||!password||!confirm){
+
+message.classList.add("error");
+message.innerText=txt[lang].fill;
+return;
+
+}
+
+if(password!==confirm){
+
+message.classList.add("error");
+message.innerText=txt[lang].match;
+return;
+
+}
+
+try{
+
+const res=await fetch(`${API}/signup`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email_or_phone:email,
+password:password
+})
+
+});
+
+const data=await res.json();
+
+if(data.success){
+
+message.classList.add("success");
+message.innerText=txt[lang].success;
+
+setTimeout(()=>{
+
+window.location.href="login.html";
+
+},1500);
+
+}else{
+
+message.classList.add("error");
+message.innerText=data.message||txt[lang].exists;
+
+}
+
+}catch(err){
+
+console.error(err);
+
+message.classList.add("error");
+message.innerText=txt[lang].error;
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
