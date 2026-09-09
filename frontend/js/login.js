@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API="https://krishna-hospital-backend.onrender.com";
 
 const loginForm = document.getElementById("loginForm");
 const loginId = document.getElementById("loginId");

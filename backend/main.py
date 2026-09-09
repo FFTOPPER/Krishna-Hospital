@@ -27,14 +27,14 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://localhost:5500",
 
-        # Production (Replace with your actual Vercel URLs)
-        "https://krishna-patient.vercel.app",
-        "https://krishna-reception.vercel.app",
-        "https://krishna-doctor.vercel.app"
+        # Render Frontends (Replace these with your final URLs if different)
+        "https://krishna-patient.onrender.com",
+        "https://krishna-reception.onrender.com",
+        "https://krishna-doctor.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 # =====================================================
@@ -73,5 +73,6 @@ app.include_router(doctor_router)
 def home():
     return {
         "success": True,
-        "message": "Krishna Hospital Digital Patient Registration API Running"
+        "message": "Krishna Hospital Digital Patient Registration API Running",
+        "version": "1.0.0"
     }
