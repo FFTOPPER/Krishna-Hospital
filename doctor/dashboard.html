@@ -56,7 +56,7 @@ gap:12px;
 cursor:pointer;
 padding:8px 12px;
 border-radius:12px;
-transition:.2s;
+transition:.25s;
 }
 
 .profile:hover{
@@ -99,10 +99,20 @@ margin-bottom:8px;
 color:#64748b;
 }
 
+/* Tabs Row */
+
+.tabs-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+gap:15px;
+flex-wrap:wrap;
+}
+
 .tabs{
 display:flex;
 gap:12px;
-margin-bottom:25px;
 flex-wrap:wrap;
 }
 
@@ -118,6 +128,41 @@ transition:.25s;
 .tab.active{
 background:#2f63e0;
 color:white;
+}
+
+/* Common Calendar Button */
+
+.calendar-main-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:14px;
+background:#2f63e0;
+color:white;
+font-size:22px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 8px 20px rgba(47,99,224,.25);
+transition:.25s;
+}
+
+.calendar-main-btn:hover{
+transform:translateY(-2px);
+background:#2553c9;
+}
+
+.back-filter{
+display:none;
+margin-bottom:20px;
+padding:12px 20px;
+background:#2f63e0;
+color:white;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
 }
 
 .list{
@@ -223,6 +268,111 @@ transition:.25s;
 background:#d32f2f;
 }
 
+/* Calendar Modal */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+padding:20px;
+}
+
+.calendar-card{
+background:white;
+width:100%;
+max-width:430px;
+border-radius:24px;
+padding:22px;
+box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.cal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.cal-header button{
+border:none;
+background:#eef4ff;
+width:40px;
+height:40px;
+border-radius:10px;
+cursor:pointer;
+font-size:18px;
+}
+
+.cal-title{
+font-size:20px;
+font-weight:700;
+color:#2f63e0;
+}
+
+.weekdays,.days{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+text-align:center;
+}
+
+.weekdays div{
+padding:10px;
+font-size:13px;
+font-weight:600;
+color:#64748b;
+}
+
+.day{
+padding:12px;
+margin:3px;
+border-radius:12px;
+cursor:pointer;
+position:relative;
+transition:.2s;
+}
+
+.day:hover{
+background:#eef4ff;
+}
+
+.today{
+background:#2f63e0;
+color:white;
+font-weight:700;
+}
+
+.has-event::after{
+content:"";
+width:6px;
+height:6px;
+background:#2563eb;
+border-radius:50%;
+position:absolute;
+bottom:6px;
+left:50%;
+transform:translateX(-50%);
+}
+
+.today.has-event::after{
+background:white;
+}
+
+.close-btn{
+width:100%;
+margin-top:20px;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#2f63e0;
+color:white;
+cursor:pointer;
+font-weight:600;
+}
+
 @media(max-width:700px){
 
 .header{
@@ -233,16 +383,12 @@ padding:16px;
 width:48px;
 }
 
-.brand h2{
-font-size:20px;
-}
-
-.container{
-padding:20px 15px;
-}
-
 .grid{
 grid-template-columns:1fr;
+}
+
+.tabs-row{
+align-items:flex-start;
 }
 
 }
@@ -288,29 +434,67 @@ grid-template-columns:1fr;
 
 </div>
 
+<!-- Updated Tabs with Common Calendar -->
+
+<div class="tabs-row">
+
 <div class="tabs">
 
 <div class="tab active" onclick="switchTab('today',this)">
-
 Today's Patients
-
 </div>
 
 <div class="tab" onclick="switchTab('upcoming',this)">
-
 Upcoming Patients
-
 </div>
 
 </div>
+
+<button class="calendar-main-btn" onclick="openCalendar()" title="Appointment Calendar">
+📅
+</button>
+
+</div>
+
+<button id="backFilter" class="back-filter" onclick="resetDashboard()">
+← Back to Dashboard
+</button>
 
 <div id="patientList" class="list"></div>
 
 <button class="logout" onclick="logout()">
-
 Logout
-
 </button>
+
+</div>
+
+<!-- Calendar Modal -->
+
+<div class="modal" id="calendarModal">
+
+<div class="calendar-card">
+
+<div class="cal-header">
+
+<button onclick="changeMonth(-1)">❮</button>
+
+<div class="cal-title" id="monthTitle"></div>
+
+<button onclick="changeMonth(1)">❯</button>
+
+</div>
+
+<div class="weekdays">
+<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+</div>
+
+<div id="calendarDays" class="days"></div>
+
+<button class="close-btn" onclick="closeCalendar()">
+Close Calendar
+</button>
+
+</div>
 
 </div>
 
@@ -320,15 +504,22 @@ const API="https://krishna-hospital-backend.onrender.com";
 
 const doctorName=localStorage.getItem("doctor_name") || "Doctor";
 
-doctorNameElement=document.getElementById("doctorName");
+const doctorNameElement=document.getElementById("doctorName");
+const welcomeText=document.getElementById("welcomeText");
+const initial=document.getElementById("initial");
+const patientList=document.getElementById("patientList");
+const backFilter=document.getElementById("backFilter");
+const calendarModal=document.getElementById("calendarModal");
+const calendarDays=document.getElementById("calendarDays");
+const monthTitle=document.getElementById("monthTitle");
+
 doctorNameElement.innerText=doctorName;
-
 welcomeText.innerText=`Welcome back, Dr. ${doctorName}`;
-
 initial.innerText=doctorName.charAt(0).toUpperCase();
 
 let todayPatients=[];
 let upcomingPatients=[];
+let allPatients=[];
 let currentTab="today";
 
 async function loadPatients(){
@@ -350,7 +541,11 @@ return;
 todayPatients=data.today || [];
 upcomingPatients=data.upcoming || [];
 
+allPatients=[...todayPatients,...upcomingPatients];
+
 render(todayPatients);
+
+generateCalendar();
 
 }catch(err){
 
@@ -387,9 +582,7 @@ patientList.innerHTML+=`
 <div class="top">
 
 <div class="patient-id">
-
 KH-${String(patient.patient_id).padStart(4,"0")}
-
 </div>
 
 <div class="badge">Confirmed</div>
@@ -398,93 +591,27 @@ KH-${String(patient.patient_id).padStart(4,"0")}
 
 <div class="grid">
 
-<div class="box">
+<div class="box"><div class="label">Registration ID</div><div class="value">#${patient.registration_id}</div></div>
 
-<div class="label">Registration ID</div>
+<div class="box"><div class="label">Child Name</div><div class="value">${patient.child_name}</div></div>
 
-<div class="value">#${patient.registration_id}</div>
+<div class="box"><div class="label">Parent Name</div><div class="value">${patient.parent_name}</div></div>
 
-</div>
+<div class="box"><div class="label">Age</div><div class="value">${patient.age}</div></div>
 
-<div class="box">
+<div class="box"><div class="label">Gender</div><div class="value">${patient.gender}</div></div>
 
-<div class="label">Child Name</div>
+<div class="box"><div class="label">Date of Birth</div><div class="value">${patient.dob}</div></div>
 
-<div class="value">${patient.child_name}</div>
+<div class="box"><div class="label">Consultation Date</div><div class="value">${patient.consultation_date}</div></div>
 
-</div>
+<div class="box"><div class="label">Appointment Date</div><div class="value">📅 ${patient.visit_date}</div></div>
 
-<div class="box">
+<div class="box"><div class="label">Appointment Time</div><div class="value">🕒 ${patient.visit_time}</div></div>
 
-<div class="label">Parent Name</div>
+<div class="box"><div class="label">Referred By</div><div class="value">${patient.referred_by || "-"}</div></div>
 
-<div class="value">${patient.parent_name}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Age</div>
-
-<div class="value">${patient.age}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Gender</div>
-
-<div class="value">${patient.gender}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Date of Birth</div>
-
-<div class="value">${patient.dob}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Consultation Date</div>
-
-<div class="value">${patient.consultation_date}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Appointment Date</div>
-
-<div class="value">📅 ${patient.visit_date}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Appointment Time</div>
-
-<div class="value">🕒 ${patient.visit_time}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Referred By</div>
-
-<div class="value">${patient.referred_by || "-"}</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">Parent Education & Occupation</div>
-
-<div class="value">${patient.parent_education_occupation || "-"}</div>
-
-</div>
+<div class="box"><div class="label">Parent Education & Occupation</div><div class="value">${patient.parent_education_occupation || "-"}</div></div>
 
 </div>
 
@@ -520,7 +647,96 @@ document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
 
 element.classList.add("active");
 
+backFilter.style.display="none";
+
 render(type==="today" ? todayPatients : upcomingPatients);
+
+}
+
+/* Calendar */
+
+let currentMonth=new Date();
+
+function openCalendar(){
+
+calendarModal.style.display="flex";
+
+}
+
+function closeCalendar(){
+
+calendarModal.style.display="none";
+
+}
+
+function changeMonth(step){
+
+currentMonth.setMonth(currentMonth.getMonth()+step);
+
+generateCalendar();
+
+}
+
+function generateCalendar(){
+
+calendarDays.innerHTML="";
+
+const year=currentMonth.getFullYear();
+const month=currentMonth.getMonth();
+
+monthTitle.innerText=currentMonth.toLocaleString("default",{month:"long",year:"numeric"});
+
+const firstDay=new Date(year,month,1).getDay();
+
+const daysInMonth=new Date(year,month+1,0).getDate();
+
+for(let i=0;i<firstDay;i++){
+
+calendarDays.innerHTML+="<div></div>";
+
+}
+
+const today=new Date().toISOString().split("T")[0];
+
+for(let d=1;d<=daysInMonth;d++){
+
+const full=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+const hasEvent=allPatients.some(p=>p.visit_date===full);
+
+calendarDays.innerHTML+=`
+<div class="day ${full===today?"today":""} ${hasEvent?"has-event":""}"
+onclick="filterDate('${full}')">${d}</div>`;
+
+}
+
+}
+
+function filterDate(date){
+
+const filtered=allPatients.filter(p=>p.visit_date===date);
+
+currentTab="calendar";
+
+render(filtered);
+
+backFilter.style.display="inline-block";
+
+closeCalendar();
+
+}
+
+function resetDashboard(){
+
+backFilter.style.display="none";
+
+currentTab="today";
+
+document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
+
+document.querySelector(".tab").classList.add("active");
+
+render(todayPatients);
 
 }
 

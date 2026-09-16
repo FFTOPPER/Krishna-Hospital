@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Confirmed Appointments</title>
+<title>Confirmed Appointments | Krishna Hospital</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,8 @@ body{
 background:#eef5ff;
 min-height:100vh;
 }
+
+/* Header */
 
 .header{
 background:white;
@@ -56,23 +58,71 @@ text-decoration:none;
 font-weight:600;
 }
 
+/* Container */
+
 .container{
 max-width:1200px;
 margin:auto;
 padding:30px 20px;
 }
 
-.page-title{
+/* Title */
+
+.title-row{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
 margin-bottom:25px;
+gap:20px;
 }
 
 .page-title h1{
 color:#2f63e0;
+margin-bottom:8px;
 }
 
 .page-title p{
 color:#64748b;
 }
+
+/* Calendar Button */
+
+.calendar-btn{
+width:52px;
+height:52px;
+border:none;
+border-radius:16px;
+background:#2f63e0;
+color:white;
+font-size:24px;
+cursor:pointer;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 10px 25px rgba(47,99,224,.25);
+transition:.25s;
+}
+
+.calendar-btn:hover{
+transform:translateY(-2px);
+background:#2553c9;
+}
+
+/* Back Filter */
+
+.back-filter{
+display:none;
+margin-bottom:20px;
+padding:12px 18px;
+border:none;
+border-radius:10px;
+background:#2f63e0;
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+/* Cards */
 
 .list{
 display:flex;
@@ -151,6 +201,123 @@ text-align:center;
 padding:70px;
 color:#64748b;
 font-size:18px;
+background:white;
+border-radius:22px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+/* Calendar Modal */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+padding:20px;
+}
+
+.calendar-card{
+background:white;
+width:100%;
+max-width:430px;
+border-radius:24px;
+padding:22px;
+box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.cal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.cal-header button{
+width:40px;
+height:40px;
+border:none;
+border-radius:10px;
+background:#eef4ff;
+cursor:pointer;
+font-size:18px;
+}
+
+.cal-title{
+font-size:20px;
+font-weight:700;
+color:#2f63e0;
+}
+
+.weekdays,.days{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+text-align:center;
+}
+
+.weekdays div{
+padding:10px;
+font-size:13px;
+font-weight:600;
+color:#64748b;
+}
+
+.day{
+padding:12px;
+margin:3px;
+border-radius:12px;
+cursor:pointer;
+position:relative;
+transition:.2s;
+}
+
+.day:hover{
+background:#eef4ff;
+}
+
+.today{
+background:#2f63e0;
+color:white;
+font-weight:700;
+}
+
+.has-event::after{
+content:"";
+width:6px;
+height:6px;
+background:#2563eb;
+border-radius:50%;
+position:absolute;
+bottom:6px;
+left:50%;
+transform:translateX(-50%);
+}
+
+.today.has-event::after{
+background:white;
+}
+
+.close-btn{
+margin-top:20px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#2f63e0;
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+@media(max-width:700px){
+
+.title-row{
+flex-direction:column;
+align-items:flex-start;
+}
+
 }
 
 </style>
@@ -175,32 +342,84 @@ font-size:18px;
 
 </div>
 
-<a href="dashboard.html" class="back">← Dashboard</a>
+<a href="dashboard.html" class="back">
+← Dashboard
+</a>
 
 </header>
 
 <div class="container">
 
+<div class="title-row">
+
 <div class="page-title">
 
 <h1>Confirmed Registrations</h1>
 
-<p>
-View all patients whose appointments have been confirmed.
-</p>
+<p>View all patients whose appointments have been confirmed.</p>
 
 </div>
+
+<button class="calendar-btn" onclick="openCalendar()" title="Appointment Calendar">
+📅
+</button>
+
+</div>
+
+<button id="backFilter" class="back-filter" onclick="resetFilter()">
+← Back to All Confirmed Registrations
+</button>
 
 <div id="confirmedList" class="list"></div>
 
 </div>
 
+<!-- Calendar -->
+
+<div class="modal" id="calendarModal">
+
+<div class="calendar-card">
+
+<div class="cal-header">
+
+<button onclick="changeMonth(-1)">❮</button>
+
+<div class="cal-title" id="monthTitle"></div>
+
+<button onclick="changeMonth(1)">❯</button>
+
+</div>
+
+<div class="weekdays">
+<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+</div>
+
+<div id="calendarDays" class="days"></div>
+
+<button class="close-btn" onclick="closeCalendar()">
+Close Calendar
+</button>
+
+</div>
+
+</div>
+
 <script>
+
 const API="https://krishna-hospital-backend.onrender.com";
 
-async function loadConfirmed(){
-
 const container=document.getElementById("confirmedList");
+const calendarModal=document.getElementById("calendarModal");
+const calendarDays=document.getElementById("calendarDays");
+const monthTitle=document.getElementById("monthTitle");
+const backFilter=document.getElementById("backFilter");
+
+let confirmedPatients=[];
+let currentMonth=new Date();
+
+/* Load */
+
+async function loadConfirmed(){
 
 container.innerHTML="<div class='empty'>Loading confirmed appointments...</div>";
 
@@ -210,29 +429,35 @@ const res=await fetch(`${API}/receptionist/queue`);
 
 const data=await res.json();
 
-if(!data.success){
+confirmedPatients=data.registrations.filter(r=>r.status==="Confirmed");
 
-container.innerHTML="<div class='empty'>Unable to load appointments.</div>";
+render(confirmedPatients);
 
-return;
+generateCalendar();
+
+}catch(err){
+
+container.innerHTML="<div class='empty'>Unable to connect to server.</div>";
+
+}
 
 }
 
-const confirmed=data.registrations.filter(
-r=>r.status==="Confirmed"
-);
+/* Render */
 
-if(confirmed.length===0){
-
-container.innerHTML="<div class='empty'>No confirmed appointments available.</div>";
-
-return;
-
-}
+function render(list){
 
 container.innerHTML="";
 
-confirmed.forEach(p=>{
+if(list.length===0){
+
+container.innerHTML="<div class='empty'>No appointments found for this date.</div>";
+
+return;
+
+}
+
+list.forEach(p=>{
 
 container.innerHTML+=`
 
@@ -283,11 +508,8 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 </div>
 
 <div class="box" style="margin-bottom:15px">
-
 <div class="label">Consultation Complaint</div>
-
 <div class="value">${p.consultation_complaints||"-"}</div>
-
 </div>
 
 <div class="schedule">
@@ -306,13 +528,83 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 
 });
 
-}catch(err){
+}
 
-console.error(err);
+/* Calendar */
 
-container.innerHTML="<div class='empty'>Unable to connect to server.</div>";
+function openCalendar(){
+
+calendarModal.style.display="flex";
 
 }
+
+function closeCalendar(){
+
+calendarModal.style.display="none";
+
+}
+
+function changeMonth(step){
+
+currentMonth.setMonth(currentMonth.getMonth()+step);
+
+generateCalendar();
+
+}
+
+function generateCalendar(){
+
+calendarDays.innerHTML="";
+
+const year=currentMonth.getFullYear();
+const month=currentMonth.getMonth();
+
+monthTitle.innerText=currentMonth.toLocaleString("default",{month:"long",year:"numeric"});
+
+const firstDay=new Date(year,month,1).getDay();
+const daysInMonth=new Date(year,month+1,0).getDate();
+
+for(let i=0;i<firstDay;i++){
+
+calendarDays.innerHTML+="<div></div>";
+
+}
+
+const today=new Date().toISOString().split("T")[0];
+
+for(let d=1;d<=daysInMonth;d++){
+
+const full=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+const hasEvent=confirmedPatients.some(p=>p.visit_date===full);
+
+calendarDays.innerHTML+=`
+<div class="day ${full===today?"today":""} ${hasEvent?"has-event":""}"
+onclick="filterDate('${full}')">${d}</div>`;
+
+}
+
+}
+
+/* Filter */
+
+function filterDate(date){
+
+const filtered=confirmedPatients.filter(p=>p.visit_date===date);
+
+render(filtered);
+
+backFilter.style.display="inline-block";
+
+closeCalendar();
+
+}
+
+function resetFilter(){
+
+backFilter.style.display="none";
+
+render(confirmedPatients);
 
 }
 
