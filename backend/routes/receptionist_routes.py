@@ -274,9 +274,11 @@ def confirm_registration(data: ConfirmRegistrationData):
                 "message": "Receptionist not found."
             }
 
+        # Update registration status
         registration.status = "Confirmed"
         registration.rejection_reason = None
 
+        # Create or update appointment
         appointment = db.query(AppointmentUpdate).filter(
             AppointmentUpdate.registration_id == data.registration_id
         ).first()
@@ -285,6 +287,7 @@ def confirm_registration(data: ConfirmRegistrationData):
 
             appointment.visit_date = data.visit_date
             appointment.visit_time = data.visit_time
+            appointment.doctor_name = data.doctor_name
             appointment.receptionist_id = data.receptionist_id
 
         else:
@@ -293,15 +296,21 @@ def confirm_registration(data: ConfirmRegistrationData):
                 registration_id=data.registration_id,
                 receptionist_id=data.receptionist_id,
                 visit_date=data.visit_date,
-                visit_time=data.visit_time
+                visit_time=data.visit_time,
+                doctor_name=data.doctor_name
             )
 
             db.add(appointment)
 
+        # Send notification to patient
         notification = PatientNotification(
             patient_id=registration.patient_id,
             title="Appointment Confirmed",
-            message=f"Your consultation has been confirmed. Visit on {data.visit_date} at {data.visit_time.strftime('%H:%M')}."
+            message=(
+                f"Your consultation has been confirmed with "
+                f"{data.doctor_name}. Visit on {data.visit_date} "
+                f"at {data.visit_time.strftime('%H:%M')}."
+            )
         )
 
         db.add(notification)
@@ -313,10 +322,15 @@ def confirm_registration(data: ConfirmRegistrationData):
             "message": "Appointment confirmed successfully."
         }
 
+    except Exception as e:
+        db.rollback()
+        return {
+            "success": False,
+            "message": str(e)
+        }
+
     finally:
         db.close()
-
-
 # =====================================================
 # Reject Registration
 # =====================================================

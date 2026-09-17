@@ -95,6 +95,7 @@ class ConfirmRegistrationData(BaseModel):
     receptionist_id: int
     visit_date: date
     visit_time: time
+    doctor_name: str
 
 
 class RejectRegistrationData(BaseModel):

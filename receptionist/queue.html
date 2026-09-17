@@ -73,8 +73,6 @@ color:#64748b;
 margin-top:6px;
 }
 
-/* FILTER BAR */
-
 .filter-bar{
 display:flex;
 gap:12px;
@@ -254,12 +252,23 @@ font-weight:600;
 }
 
 .modal-box input,
-.modal-box textarea{
+.modal-box textarea,
+.modal-box select{
 width:100%;
 padding:12px;
 border-radius:10px;
 border:1px solid #d6dce7;
 font-family:'Poppins',sans-serif;
+font-size:15px;
+background:white;
+outline:none;
+}
+
+.modal-box input:focus,
+.modal-box textarea:focus,
+.modal-box select:focus{
+border-color:#2f63e0;
+box-shadow:0 0 0 3px rgba(47,99,224,.12);
 }
 
 .modal-box textarea{
@@ -313,8 +322,6 @@ color:#64748b;
 <p>Manage patient registrations and appointment confirmations.</p>
 </div>
 
-<!-- FILTERS -->
-
 <div class="filter-bar">
 
 <button class="filter-btn active" onclick="setFilter('All',this)">All</button>
@@ -343,6 +350,16 @@ color:#64748b;
 
 <label>Visit Time</label>
 <input type="time" id="visitTime">
+
+<label>Doctor</label>
+<select id="doctorName">
+<option value="">Select Doctor</option>
+<option value="Dr. Janani">Dr. Janani</option>
+<option value="Ms. Anitha (Psychologist)">Ms. Anitha (Psychologist)</option>
+<option value="Mrs. Shagana (Psychologist)">Mrs. Shagana (Psychologist)</option>
+<option value="Mrs. Shiny (Psychologist)">Mrs. Shiny (Psychologist)</option>
+<option value="Mrs. Briscillal (Speech Therapist)">Mrs. Briscillal (Speech Therapist)</option>
+</select>
 
 <div class="modal-actions">
 <button class="cancel" onclick="closeConfirmModal()">Cancel</button>
@@ -522,11 +539,22 @@ ${isConfirmed?`
 
 <div class="appointment-box">
 
-<div class="label">Scheduled Visit</div>
+<div class="grid">
 
-<div class="value">
+<div class="box">
+<div class="label">Visit Date</div>
+<div class="value">📅 ${p.visit_date||"-"}</div>
+</div>
 
-📅 ${p.visit_date||"-"} &nbsp;&nbsp; 🕒 ${p.visit_time||"-"}
+<div class="box">
+<div class="label">Visit Time</div>
+<div class="value">🕒 ${p.visit_time||"-"}</div>
+</div>
+
+<div class="box">
+<div class="label">Doctor</div>
+<div class="value">👨‍⚕️ ${p.doctor_name||"-"}</div>
+</div>
 
 </div>
 
@@ -584,6 +612,7 @@ currentRegistration=id;
 
 document.getElementById("visitDate").value="";
 document.getElementById("visitTime").value="";
+document.getElementById("doctorName").value="";
 
 document.getElementById("confirmModal").style.display="flex";
 
@@ -599,10 +628,11 @@ async function saveConfirmation(){
 
 const visitDate=document.getElementById("visitDate").value;
 const visitTime=document.getElementById("visitTime").value;
+const doctorName=document.getElementById("doctorName").value;
 
-if(!visitDate||!visitTime){
+if(!visitDate||!visitTime||!doctorName){
 
-alert("Please select both visit date and time.");
+alert("Please select date, time and doctor.");
 
 return;
 
@@ -619,7 +649,8 @@ body:JSON.stringify({
 registration_id:currentRegistration,
 receptionist_id:Number(receptionistId),
 visit_date:visitDate,
-visit_time:visitTime
+visit_time:visitTime,
+doctor_name:doctorName
 
 })
 
@@ -635,7 +666,7 @@ loadQueue();
 
 }else{
 
-alert(data.message);
+alert(data.message||"Unable to confirm appointment.");
 
 }
 
