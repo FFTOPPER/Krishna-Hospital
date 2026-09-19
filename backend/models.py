@@ -142,6 +142,8 @@ class AppointmentUpdate(Base):
 
     visit_time = Column(Time, nullable=False)
 
+    doctor_name = Column(String(100), nullable=True)
+
     updated_at = Column(DateTime, default=datetime.utcnow)
 
     registration = relationship(
