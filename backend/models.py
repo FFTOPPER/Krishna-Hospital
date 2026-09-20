@@ -73,6 +73,8 @@ class PatientRegistration(Base):
 
     address = Column(Text)
 
+    phone_number = Column(String, nullable=False)
+
     consultation_complaints = Column(Text)
 
     # Workflow status

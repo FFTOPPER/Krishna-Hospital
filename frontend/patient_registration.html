@@ -356,6 +356,20 @@ text-align:center;
 
 <div class="section">
 
+<h3 id="phoneTitle">Phone Number</h3>
+
+<div class="field">
+
+<label id="lblPhone">Phone Number</label>
+
+<input id="phoneNumber" type="tel" placeholder="Enter phone number" required>
+
+</div>
+
+</div>
+
+<div class="section">
+
 <h3 id="consultTitle">Consultation</h3>
 
 <div class="field">
@@ -411,6 +425,7 @@ parent:"4. Parent/Caregiver Name",
 edu:"5. Parent Education & Occupation",
 address:"6. Residential Address",
 complaint:"7. Complaints for Consultation",
+phone:"Phone Number",
 
 refPH:"Doctor / Self / School / Others",
 childPH:"Enter child's name",
@@ -458,6 +473,7 @@ parent:"4. பெற்றோர் / பராமரிப்பாளர் �
 edu:"5. பெற்றோரின் கல்வி மற்றும் தொழில்",
 address:"6. குடியிருப்பு முகவரி",
 complaint:"7. ஆலோசனைக்கான புகார்கள்",
+phone:"தொலைபேசி எண்",
 
 refPH:"மருத்துவர் / சுயம் / பள்ளி / மற்றவை",
 childPH:"குழந்தையின் பெயரை உள்ளிடவும்",
@@ -508,6 +524,8 @@ lblGender.innerText=t.gender;
 lblParent.innerText=t.parent;
 lblEdu.innerText=t.edu;
 lblAddress.innerText=t.address;
+lblPhone.innerText=t.phone;
+phoneTitle.innerText=t.phone;
 lblComplaint.innerText=t.complaint;
 
 referredBy.placeholder=t.refPH;
@@ -594,6 +612,7 @@ registrationForm.addEventListener("submit",async(e)=>{
 e.preventDefault();
 
 const patientId=localStorage.getItem("patient_id");
+phoneNumber.value=patientId || "";
 
 if(!patientId){
 
@@ -627,6 +646,7 @@ parent_education_occupation:parentEducation.value,
 
 address:address.value,
 
+phone_number:phoneNumber.value,
 consultation_complaints:complaint.value
 
 };

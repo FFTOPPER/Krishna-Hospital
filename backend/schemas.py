@@ -20,8 +20,14 @@ class LoginData(BaseModel):
 # Patient Registration Schema
 # =====================================================
 
+from pydantic import BaseModel
+from datetime import date
+
 class PatientRegistrationData(BaseModel):
+
     email_or_phone: str
+
+    phone_number: str
 
     consultation_date: date
 

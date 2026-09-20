@@ -492,33 +492,35 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 
 <div class="box">
 <div class="label">Referred By</div>
-<div class="value">${p.referred_by||"-"}</div>
+<div class="value">${p.referred_by || "-"}</div>
 </div>
 
 <div class="box">
 <div class="label">Consultation Date</div>
-<div class="value">${p.consultation_date}</div>
+<div class="value">${p.consultation_date || "-"}</div>
 </div>
 
 <div class="box">
 <div class="label">Address</div>
-<div class="value">${p.address||"-"}</div>
+<div class="value">${p.address || "-"}</div>
 </div>
 
 </div>
 
 <div class="box" style="margin-bottom:15px">
 <div class="label">Consultation Complaint</div>
-<div class="value">${p.consultation_complaints||"-"}</div>
+<div class="value">${p.consultation_complaints || "-"}</div>
 </div>
 
 <div class="schedule">
 
 <h4>Scheduled Appointment</h4>
 
-<p>📅 <strong>${p.visit_date}</strong></p>
+<p>📅 <strong>${p.visit_date || "-"}</strong></p>
 
-<p>🕒 <strong>${p.visit_time}</strong></p>
+<p>🕒 <strong>${p.visit_time || "-"}</strong></p>
+
+<p>👨‍⚕️ <strong>${p.doctor_name || "-"}</strong></p>
 
 </div>
 
