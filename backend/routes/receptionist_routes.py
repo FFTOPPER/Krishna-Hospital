@@ -226,6 +226,7 @@ def receptionist_queue():
                 "parent_name": registration.parent_name,
                 "parent_education_occupation": registration.parent_education_occupation,
                 "address": registration.address,
+                "phone_number": registration.phone_number,
                 "consultation_complaints": registration.consultation_complaints,
                 "status": registration.status,
                 "rejection_reason": registration.rejection_reason,

@@ -567,6 +567,12 @@ applyLanguage();
 
 };
 
+const savedLogin=localStorage.getItem("patient_id");
+
+if(savedLogin && /^[0-9]{10}$/.test(savedLogin)){
+phoneNumber.value=savedLogin;
+}
+
 const today=new Date();
 
 date.value=today.toLocaleDateString("en-GB",{
@@ -612,7 +618,6 @@ registrationForm.addEventListener("submit",async(e)=>{
 e.preventDefault();
 
 const patientId=localStorage.getItem("patient_id");
-phoneNumber.value=patientId || "";
 
 if(!patientId){
 
