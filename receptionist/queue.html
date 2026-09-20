@@ -535,32 +535,30 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 
 </div>
 
-${isConfirmed?`
-
+${isConfirmed ? `
 <div class="appointment-box">
 
-<div class="grid">
+    <div class="grid">
 
-<div class="box">
-<div class="label">Visit Date</div>
-<div class="value">📅 ${p.visit_date||"-"}</div>
+        <div class="box">
+            <div class="label">Scheduled Visit Date</div>
+            <div class="value">📅 ${p.visit_date || "-"}</div>
+        </div>
+
+        <div class="box">
+            <div class="label">Scheduled Visit Time</div>
+            <div class="value">🕒 ${p.visit_time || "-"}</div>
+        </div>
+
+        <div class="box">
+            <div class="label">Doctor</div>
+            <div class="value">👨‍⚕️ ${p.doctor_name || "-"}</div>
+        </div>
+
+    </div>
+
 </div>
-
-<div class="box">
-<div class="label">Visit Time</div>
-<div class="value">🕒 ${p.visit_time||"-"}</div>
-</div>
-
-<div class="box">
-<div class="label">Doctor</div>
-<div class="value">👨‍⚕️ ${p.doctor_name||"-"}</div>
-</div>
-
-</div>
-
-</div>
-
-`:""}
+` : ""}
 
 ${isRejected?`
 

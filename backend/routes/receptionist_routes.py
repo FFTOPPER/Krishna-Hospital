@@ -229,8 +229,21 @@ def receptionist_queue():
                 "consultation_complaints": registration.consultation_complaints,
                 "status": registration.status,
                 "rejection_reason": registration.rejection_reason,
-                "visit_date": str(latest_appointment.visit_date) if latest_appointment else None,
-                "visit_time": latest_appointment.visit_time.strftime("%H:%M") if latest_appointment else None
+
+                "visit_date": (
+                    str(latest_appointment.visit_date)
+                    if latest_appointment else None
+                ),
+
+                "visit_time": (
+                    latest_appointment.visit_time.strftime("%H:%M")
+                    if latest_appointment else None
+                ),
+
+                "doctor_name": (
+                    latest_appointment.doctor_name
+                    if latest_appointment else None
+                )
 
             })
 
@@ -425,7 +438,7 @@ def confirmed_registrations():
                 "consultation_complaints": registration.consultation_complaints,
                 "visit_date": str(appointment.visit_date) if appointment else None,
                 "visit_time": appointment.visit_time.strftime("%H:%M") if appointment else None
-
+                "doctor_name": appointment.doctor_name if appointment else None
             })
 
         return {
