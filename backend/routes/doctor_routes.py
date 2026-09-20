@@ -210,6 +210,8 @@ def build_patient_data(registration, appointment):
 
         "address": registration.address,
 
+        "phone_number": registration.phone_number,
+
         "consultation_complaints":
             registration.consultation_complaints,
 
@@ -217,10 +219,11 @@ def build_patient_data(registration, appointment):
 
         "visit_time":
             appointment.visit_time.strftime("%H:%M")
-            if appointment.visit_time else None
+            if appointment.visit_time else None,
+
+        "doctor_name": appointment.doctor_name
 
     }
-
 
 # =====================================================
 # Doctor Dashboard (Today + Upcoming)

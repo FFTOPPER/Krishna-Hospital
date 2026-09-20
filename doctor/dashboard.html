@@ -130,6 +130,18 @@ background:#2f63e0;
 color:white;
 }
 
+
+.doctor-filter{
+padding:10px 16px;
+border:1px solid #d6dce7;
+border-radius:12px;
+background:white;
+font-family:'Poppins',sans-serif;
+font-weight:600;
+min-width:260px;
+cursor:pointer;
+}
+
 /* Common Calendar Button */
 
 .calendar-main-btn{
@@ -450,6 +462,15 @@ Upcoming Patients
 
 </div>
 
+<select id="doctorFilter" class="doctor-filter" onchange="applyCurrentView()">
+<option value="All">All Doctors</option>
+<option value="Dr. Janani">Dr. Janani</option>
+<option value="Ms. Anitha (Psychologist)">Ms. Anitha (Psychologist)</option>
+<option value="Mrs. Shagana (Psychologist)">Mrs. Shagana (Psychologist)</option>
+<option value="Mrs. Shiny (Psychologist)">Mrs. Shiny (Psychologist)</option>
+<option value="Mrs. Briscillal (Speech Therapist)">Mrs. Briscillal (Speech Therapist)</option>
+</select>
+
 <button class="calendar-main-btn" onclick="openCalendar()" title="Appointment Calendar">
 📅
 </button>
@@ -521,6 +542,26 @@ let todayPatients=[];
 let upcomingPatients=[];
 let allPatients=[];
 let currentTab="today";
+let selectedDoctor="All";
+
+
+function filterByDoctor(list){
+    selectedDoctor=document.getElementById("doctorFilter").value;
+    if(selectedDoctor==="All") return list;
+    return list.filter(p=>p.doctor_name===selectedDoctor);
+}
+
+function applyCurrentView(){
+    if(currentTab==="today"){
+        render(filterByDoctor(todayPatients));
+    }else if(currentTab==="upcoming"){
+        render(filterByDoctor(upcomingPatients));
+    }else{
+        render(filterByDoctor(allPatients));
+    }
+    generateCalendar();
+}
+
 
 async function loadPatients(){
 
@@ -543,7 +584,7 @@ upcomingPatients=data.upcoming || [];
 
 allPatients=[...todayPatients,...upcomingPatients];
 
-render(todayPatients);
+render(filterByDoctor(todayPatients));
 
 generateCalendar();
 
@@ -649,7 +690,7 @@ element.classList.add("active");
 
 backFilter.style.display="none";
 
-render(type==="today" ? todayPatients : upcomingPatients);
+render(filterByDoctor(type==="today" ? todayPatients : upcomingPatients));
 
 }
 
@@ -702,7 +743,7 @@ for(let d=1;d<=daysInMonth;d++){
 
 const full=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
 
-const hasEvent=allPatients.some(p=>p.visit_date===full);
+const hasEvent=filterByDoctor(allPatients).some(p=>p.visit_date===full);
 
 calendarDays.innerHTML+=`
 <div class="day ${full===today?"today":""} ${hasEvent?"has-event":""}"
@@ -718,7 +759,7 @@ const filtered=allPatients.filter(p=>p.visit_date===date);
 
 currentTab="calendar";
 
-render(filtered);
+render(filterByDoctor(filtered));
 
 backFilter.style.display="inline-block";
 
@@ -736,7 +777,7 @@ document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
 
 document.querySelector(".tab").classList.add("active");
 
-render(todayPatients);
+render(filterByDoctor(todayPatients));
 
 }
 
