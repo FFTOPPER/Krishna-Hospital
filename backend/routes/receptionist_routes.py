@@ -437,7 +437,7 @@ def confirmed_registrations():
                 "address": registration.address,
                 "consultation_complaints": registration.consultation_complaints,
                 "visit_date": str(appointment.visit_date) if appointment else None,
-                "visit_time": appointment.visit_time.strftime("%H:%M") if appointment else None
+                "visit_time": appointment.visit_time.strftime("%H:%M") if appointment else None,
                 "doctor_name": appointment.doctor_name if appointment else None
             })
 
