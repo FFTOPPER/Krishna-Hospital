@@ -291,15 +291,11 @@ ${r.status==="Confirmed"?`
 
 <div class="label">Appointment Scheduled</div>
 
-<div class="value">
+<div class="value">📅 ${r.visit_date}</div>
 
-📅 ${r.visit_date}
+<div class="value" style="margin-top:8px;">🕒 ${r.visit_time}</div>
 
-&nbsp;&nbsp;
-
-🕒 ${r.visit_time}
-
-</div>
+<div class="value" style="margin-top:8px;">👨‍⚕️ ${r.doctor_name || "-"}</div>
 
 </div>
 

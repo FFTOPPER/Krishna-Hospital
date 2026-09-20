@@ -124,6 +124,8 @@ def patient_registration_status(patient_id: int):
                     appointment.visit_time.strftime("%H:%M")
                     if appointment else None,
 
+                "doctor_name": appointment.doctor_name if appointment else None,
+
                 "rejection_reason":
                     registration.rejection_reason
 
