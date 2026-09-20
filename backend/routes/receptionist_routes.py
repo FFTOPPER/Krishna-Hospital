@@ -486,6 +486,7 @@ def followup_list():
                 "patient_id": registration.patient_id,
                 "child_name": registration.child_name,
                 "parent_name": registration.parent_name,
+                "phone_number": registration.phone_number,
                 "visit_date": str(appointment.visit_date) if appointment else None,
                 "visit_time": appointment.visit_time.strftime("%H:%M") if appointment else None,
                 "attendance_status": followup.attendance_status if followup else None,

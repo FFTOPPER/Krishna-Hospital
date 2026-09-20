@@ -703,6 +703,11 @@ KH-${String(patient.patient_id).padStart(4,"0")}
 </div>
 
 <div class="box">
+<div class="label">Phone Number</div>
+<div class="value">${patient.phone_number||"-"}</div>
+</div>
+
+<div class="box">
 <div class="label">Appointment Date</div>
 <div class="value">${patient.visit_date}</div>
 </div>
