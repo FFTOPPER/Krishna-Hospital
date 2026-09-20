@@ -196,6 +196,31 @@ color:#15803d;
 margin-bottom:8px;
 }
 
+/* WhatsApp Button */
+
+.whatsapp-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+width:100%;
+margin-top:16px;
+padding:13px;
+border:none;
+border-radius:12px;
+background:#25D366;
+color:white;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+.whatsapp-btn:hover{
+background:#1ebc57;
+transform:translateY(-1px);
+}
+
 .empty{
 text-align:center;
 padding:70px;
@@ -505,6 +530,11 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 <div class="value">${p.address || "-"}</div>
 </div>
 
+<div class="box">
+<div class="label">Phone Number</div>
+<div class="value">${p.phone_number || "-"}</div>
+</div>
+
 </div>
 
 <div class="box" style="margin-bottom:15px">
@@ -522,6 +552,11 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 
 <p>👨‍⚕️ <strong>${p.doctor_name || "-"}</strong></p>
 
+<button class="whatsapp-btn"
+onclick="sendWhatsApp('${p.phone_number}','${p.child_name}','${p.visit_date}','${p.visit_time}','${p.doctor_name}')">
+💬 Send WhatsApp
+</button>
+
 </div>
 
 </div>
@@ -532,26 +567,55 @@ Patient ID : KH-${String(p.patient_id).padStart(4,"0")}
 
 }
 
+/* WhatsApp */
+
+function sendWhatsApp(phone,childName,visitDate,visitTime,doctorName){
+
+if(!phone||phone==="-"||phone==="null"){
+alert("Phone number not available.");
+return;
+}
+
+phone=phone.replace(/\D/g,"");
+
+if(phone.length===10){
+phone="91"+phone;
+}
+
+const message=`🏥 Krishna Hospital – Appointment Confirmation
+
+Dear Parent/Caregiver,
+
+Your appointment has been confirmed.
+
+👦 Child: ${childName}
+
+📅 Appointment Date: ${visitDate}
+
+🕒 Appointment Time: ${visitTime}
+
+👨‍⚕️ Doctor: ${doctorName}
+
+📍 Krishna Hospital – Mental Wellness Centre
+
+Please arrive 15 minutes before your scheduled appointment for registration.
+
+Thank you.
+Krishna Hospital`;
+
+window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,"_blank");
+
+}
+
 /* Calendar */
 
-function openCalendar(){
+function openCalendar(){calendarModal.style.display="flex";}
 
-calendarModal.style.display="flex";
-
-}
-
-function closeCalendar(){
-
-calendarModal.style.display="none";
-
-}
+function closeCalendar(){calendarModal.style.display="none";}
 
 function changeMonth(step){
-
 currentMonth.setMonth(currentMonth.getMonth()+step);
-
 generateCalendar();
-
 }
 
 function generateCalendar(){
@@ -566,11 +630,7 @@ monthTitle.innerText=currentMonth.toLocaleString("default",{month:"long",year:"n
 const firstDay=new Date(year,month,1).getDay();
 const daysInMonth=new Date(year,month+1,0).getDate();
 
-for(let i=0;i<firstDay;i++){
-
-calendarDays.innerHTML+="<div></div>";
-
-}
+for(let i=0;i<firstDay;i++) calendarDays.innerHTML+="<div></div>";
 
 const today=new Date().toISOString().split("T")[0];
 
@@ -583,9 +643,7 @@ const hasEvent=confirmedPatients.some(p=>p.visit_date===full);
 calendarDays.innerHTML+=`
 <div class="day ${full===today?"today":""} ${hasEvent?"has-event":""}"
 onclick="filterDate('${full}')">${d}</div>`;
-
 }
-
 }
 
 /* Filter */
