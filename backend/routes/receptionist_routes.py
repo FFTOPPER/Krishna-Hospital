@@ -490,7 +490,11 @@ def followup_list():
                 "attendance_status": followup.attendance_status if followup else None,
                 "followup_date": str(followup.followup_date) if followup and followup.followup_date else None,
                 "followup_time": followup.followup_time.strftime("%H:%M") if followup and followup.followup_time else None,
-                "doctor_name": followup.doctor_name if followup else None
+                "doctor_name": (
+                    followup.doctor_name
+                    if followup and followup.doctor_name
+                    else appointment.doctor_name if appointment else None
+)
 
             })
 
